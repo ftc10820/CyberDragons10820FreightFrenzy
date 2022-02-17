@@ -40,11 +40,18 @@ import com.qualcomm.robotcore.hardware.Servo;
 
         //run during op mode
         while (opModeIsActive()) {
-            
-            turnLeft(1, 5000);
+            /*
+            moveBack(1, 5000);
             moveRight(1, 5000);
-            moveForward(1, 5000);
             turnLeft(1, 5000);
+            moveForward(1, 5000);
+             */
+
+
+            pickupFreight(1);
+            sleep(10000);
+            pickupFreight(0);
+
 
 
         /*
@@ -135,7 +142,7 @@ import com.qualcomm.robotcore.hardware.Servo;
         backLeft.setPower(power);
         sleep(time);
 
-        stopWheel();
-    }
-    
+        private void pickupFreight (double power){
+        bucket.setPower(power);
+            }
 }
