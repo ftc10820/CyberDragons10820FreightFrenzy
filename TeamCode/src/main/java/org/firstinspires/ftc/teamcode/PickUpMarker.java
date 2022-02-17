@@ -32,7 +32,7 @@ public void runOpMode {
   waitForStart();
   //run during op mode
   while (opModeIsActive()) {
-    moveArmDown(1, 2500);
+    moveArmDown(.5, 500);
 
 
   };
