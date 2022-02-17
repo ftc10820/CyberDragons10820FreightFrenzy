@@ -87,7 +87,7 @@ import com.qualcomm.robotcore.hardware.Servo;
         distanceIntake = hardwareMap.get(DistanceSensor.class, "distanceIntake");
         colorFront = hardwareMap.get(ColorSensor.class, "colorFront");
     }
-        
+
 
         private void moveForward ( double power, int time){
         frontRight.setPower(power);
