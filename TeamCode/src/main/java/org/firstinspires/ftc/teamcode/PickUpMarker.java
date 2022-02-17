@@ -1,3 +1,17 @@
+/*
+TeleOp:
+1. Get infront of Team Marker
+2. Press button or somehow changes to Autonomous
+Autonomous:
+1. Backup a enough to put the arm down
+2. Move arm all the way down (Or enough to pick it up)
+3. Move forward same amount as Part 1 or enough to connect to the hook thing
+4. Move arm up to the top of the shipping area
+5. Lower it enough so it touches the pole, and enough so it un-hooks
+6. Move Back
+7. Switch to TeleOp/End function
+*/
+
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
