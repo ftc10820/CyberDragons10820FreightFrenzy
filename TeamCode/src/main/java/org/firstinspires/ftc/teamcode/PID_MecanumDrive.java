@@ -183,7 +183,7 @@ public class PID_MecanumDrive extends LinearOpMode {
             
             
             //set motor powers
-            setThrottle(frontLeftPower, frontRightPower, backLeftPower, backRightPower);
+            //setThrottle(frontLeftPower, frontRightPower, backLeftPower, backRightPower);
 
 
 
