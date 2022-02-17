@@ -32,7 +32,7 @@ public void runOpMode {
   waitForStart();
   //run during op mode
   while (opModeIsActive()) {
-
+    moveArmDown(1, 2500);
 
 
   };
@@ -50,4 +50,13 @@ private void initializeRobot () {
   distanceCarousel = hardwareMap.get(DistanceSensor.class, "distanceCarousel");
   distanceIntake = hardwareMap.get(DistanceSensor.class, "distanceIntake");
   colorFront = hardwareMap.get(ColorSensor.class, "colorFront");
+};
+private void moveArmDown(double power, int time){
+  armMotor.setPower(power);
+  sleep(time);
+  armMotor.setPower(0);
+};
+
+private void moveArmUp(double power, int time){
+
 };
