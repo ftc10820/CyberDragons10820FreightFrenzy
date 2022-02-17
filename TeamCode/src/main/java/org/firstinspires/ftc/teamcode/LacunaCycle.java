@@ -145,6 +145,6 @@ public abstract class LacunaCycle extends OpMode {
         sleep(time);
 
         private void pickupFreight (double power){
-        bucket.setPower(power)
+        bucket.setPower(power);
             }
 }
