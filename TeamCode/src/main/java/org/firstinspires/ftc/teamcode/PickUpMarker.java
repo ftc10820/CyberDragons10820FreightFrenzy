@@ -41,10 +41,12 @@ public class PickUpMarker extends LinearOpMode {
     waitForStart();
     //run during op mode
     while (opModeIsActive()) {
+      moveArmUp(1, 500);
+      /*
       moveBack(.5, 500);
       moveArmDown(1, 500);
       moveForward(.5, 500);
-      moveArmUp(1, 500);
+      */
     }
   }
 
