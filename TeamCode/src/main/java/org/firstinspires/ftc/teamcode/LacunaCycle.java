@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp
 
-public class LacunaCycle extends OpMode {
+public abstract class LacunaCycle extends OpMode {
 
     private DcMotorEx frontRight;
     private DcMotorEx frontLeft;
@@ -31,10 +31,9 @@ public class LacunaCycle extends OpMode {
     private DistanceSensor distanceIntake;
     private ColorSensor colorFront;
 
-};
 
     @Override
-    public void runOpMode {
+    public void runOpMode() {
 
         //initialization
         initializeRobot();
@@ -43,35 +42,102 @@ public class LacunaCycle extends OpMode {
 
         //run during op mode
         while (opModeIsActive()) {
+            
+            turnLeft(1, 5000);
+            moveRight(1, 5000);
+            moveForward(1, 5000);
+            turnLeft(1, 5000);
 
 
+        /*
+        moveForward(1, 5000);
+        moveBack(1, 5000);
+        moveRight(1, 5000);
+        moveLeft(1, 5000);
+        turnRight(1, 5000);
+        turnLeft(1,5000);
+         */
 
 
+        }
+    }
 
+        private void initializeRobot () {
 
-        };
+        frontLeft = hardwareMap.get(DcMotorEx.class, "FrontLeft");
+        frontRight = hardwareMap.get(DcMotorEx.class, "FrontRight");
+        backLeft = hardwareMap.get(DcMotorEx.class, "BackLeft");
+        backRight = hardwareMap.get(DcMotorEx.class, "BackRight");
 
-        private void initializeRobot() {
+        bucket = hardwareMap.get(DcMotorEx.class, "Bucket");
+        bucketTurner = hardwareMap.get(DcMotorEx.class, "BucketTurner");
+        armMotor = hardwareMap.get(DcMotorEx.class, "ArmMotor");
 
-            frontLeft = hardwareMap.get(DcMotorEx.class, "FrontLeft");
-            frontRight = hardwareMap.get(DcMotorEx.class, "FrontRight");
-            backLeft = hardwareMap.get(DcMotorEx.class, "BackLeft");
-            backRight = hardwareMap.get(DcMotorEx.class, "BackRight");
+        distanceLeftFront = hardwareMap.get(DistanceSensor.class, "distanceLeftFront");
+        distanceLeftBack = hardwareMap.get(DistanceSensor.class, "distanceLeftBack");
+        distanceRightFront = hardwareMap.get(DistanceSensor.class, "distanceRightFront");
+        distanceRightBack = hardwareMap.get(DistanceSensor.class, "distanceRightBack");
+        //distanceFront = hardwareMap.get(DistanceSensor.class, "distanceFront");
+        distanceCarousel = hardwareMap.get(DistanceSensor.class, "distanceCarousel");
+        distanceIntake = hardwareMap.get(DistanceSensor.class, "distanceIntake");
+        colorFront = hardwareMap.get(ColorSensor.class, "colorFront");
+    }
+        
 
-            bucket = hardwareMap.get(DcMotorEx.class, "Bucket");
-            bucketTurner = hardwareMap.get(DcMotorEx.class, "BucketTurner");
-            armMotor = hardwareMap.get(DcMotorEx.class, "ArmMotor");
+        private void moveForward ( double power, int time){
+        frontRight.setPower(power);
+        frontLeft.setPower(power);
+        backRight.setPower(power);
+        backLeft.setPower(power);
+        sleep(time);
+        stopWheel();
+    }
+        private void moveBack ( double power, int time){
+        frontRight.setPower(power * -1);
+        frontLeft.setPower(power * -1);
+        backRight.setPower(power * -1);
+        backLeft.setPower(power * -1);
+        sleep(time);
+        stopWheel();
+    }
+        private void moveLeft ( double power, int time){
+        frontRight.setPower(power);
+        backRight.setPower(power * -1);
+        frontLeft.setPower(power * -1);
+        backLeft.setPower(power);
+        sleep(time);
+        stopWheel();
+    }
+        private void moveRight ( double power, int time){
+        frontRight.setPower(power * -1);
+        backRight.setPower(power);
+        frontLeft.setPower(power);
+        backLeft.setPower(power * -1);
+        sleep(time);
+        stopWheel();
+    }
+        private void stopWheel () {
+        frontRight.setPower(0);
+        frontLeft.setPower(0);
+        backRight.setPower(0);
+        backLeft.setPower(0);
+    }
+        private void turnRight ( double power, int time){
+        frontRight.setPower(power);
+        backRight.setPower(power);
+        frontLeft.setPower(power * -1);
+        backLeft.setPower(power * -1);
+        sleep(time);
+        stopWheel();
+    }
+        private void turnLeft ( double power, int time){
+        frontRight.setPower(power * -1);
+        backRight.setPower(power * -1);
+        frontLeft.setPower(power);
+        backLeft.setPower(power);
+        sleep(time);
 
-            distanceLeftFront = hardwareMap.get(DistanceSensor.class, "distanceLeftFront");
-            distanceLeftBack = hardwareMap.get(DistanceSensor.class, "distanceLeftBack");
-            distanceRightFront = hardwareMap.get(DistanceSensor.class, "distanceRightFront");
-            distanceRightBack = hardwareMap.get(DistanceSensor.class, "distanceRightBack");
-            //distanceFront = hardwareMap.get(DistanceSensor.class, "distanceFront");
-            distanceCarousel = hardwareMap.get(DistanceSensor.class, "distanceCarousel");
-            distanceIntake = hardwareMap.get(DistanceSensor.class, "distanceIntake");
-            colorFront = hardwareMap.get(ColorSensor.class, "colorFront");
-        };
-
-
-
-    };
+        stopWheel();
+    }
+    
+}
