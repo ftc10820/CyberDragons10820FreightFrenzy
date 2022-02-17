@@ -9,6 +9,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
 @TeleOp
 
 public abstract class LacunaCycle extends OpMode {
@@ -42,17 +44,18 @@ public abstract class LacunaCycle extends OpMode {
 
         //run during op mode
         while (opModeIsActive()) {
-            /*
-            moveBack(1, 5000);
-            moveRight(1, 5000);
-            turnLeft(1, 5000);
-            moveForward(1, 5000);
-             */
 
 
-            pickupFreight(1);
-            sleep(10000);
-            pickupFreight(0);
+            pickupFreight(1, 0);
+            /*moveArm(1, 2000);
+            moveArm(0);
+            moveBack(1, 1000);
+            turnRight(1, 1000);
+            dropFreight(1, 1000);
+            turnLeft(1, 1000);
+            moveForward(1, 1000);
+            */
+
 
 
 
@@ -137,14 +140,26 @@ public abstract class LacunaCycle extends OpMode {
         sleep(time);
         stopWheel();
     }
-        private void turnLeft ( double power, int time){
-        frontRight.setPower(power * -1);
-        backRight.setPower(power * -1);
-        frontLeft.setPower(power);
-        backLeft.setPower(power);
-        sleep(time);
-
-        private void pickupFreight (double power){
+        private void turnLeft ( double power, int time) {
+            frontRight.setPower(power * -1);
+            backRight.setPower(power * -1);
+            frontLeft.setPower(power);
+            backLeft.setPower(power);
+            sleep(time);
+    }
+        private void pickupFreight (double power, int time){
         bucket.setPower(power);
-            }
+        while(distanceIntake.getDistance(DistanceUnit.INCH) < 2.0);
+        bucket.setPower(0);
+    }
+
+        private void moveArm (double power, int time){
+        armMotor.setPower(power);
+    }
+
+        private void dropFreight (double power, int time){
+        bucketTurner.setPower(power*-1);
+    }
+
+
 }
