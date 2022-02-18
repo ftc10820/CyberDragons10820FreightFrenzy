@@ -17,7 +17,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
-
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 @TeleOp
@@ -42,10 +41,42 @@ public class ShippingHubAutomationLevels extends LinearOpMode {
     private ColorSensor colorFront;
 
 
+    public enum LiftStates {
+
+        LIFT_START,
+        LIFT_LEVELONE,
+        LIFT_LEVELTWO,
+        LIFT_LEVELTHREE;
+    }
+
+
+    LiftStates liftstates = LiftStates.LIFT_START;
+
+    int LINEAR_SLIDE_HIGH = -150;
+    int LINEAR_SLIDE_LOW = -15;
+
+    int BUCKET_TURNER_HIGH = -30;
+    int BUCKET_TURNER_LOW = -20;
+
+    double BUCKET_IDLE = 0;
+    double BUCKET_RELEASE = 1;
+
+    double RELEASE_TIME = 5000;
+
+    ElapsedTime releaseTimer = new ElapsedTime();
+
+    double speed = 1200; //arbitrary number; static to allow for analyzing how PID performs through multiple speeds in dashboard
+
+    PIDCoefficients pidCoeffs = new PIDCoefficients(0, 0, 0); //PID coefficients that need to be tuned probably through FTC dashboard
+    PIDCoefficients pidGains = new PIDCoefficients(0, 0, 0); //PID gains which we will define later in the process
+
+    ElapsedTime PIDTimer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS); //timer
+
+
     public void runOpMode() {
 
         //initialization
-        initializeRobot();
+        //initializeRobot();
 
         waitForStart();
 
@@ -70,37 +101,12 @@ public class ShippingHubAutomationLevels extends LinearOpMode {
             distanceIntake = hardwareMap.get(DistanceSensor.class, "distanceIntake");
             colorFront = hardwareMap.get(ColorSensor.class, "colorFront");
 
-            public enum LiftStates {
-
-                LIFT_START,
-                LIFT_LEVELONE,
-                LIFT_LEVELTWO,
-                LIFT_LEVELTHREE;
-            }
-            LiftStates liftstates = LiftStates.LIFT_START;
-
-            int LINEAR_SLIDE_HIGH = -150;
-            int LINEAR_SLIDE_LOW = -15;
-
-            int BUCKET_TURNER_HIGH = -30;
-            int BUCKET_TURNER_LOW = -20;
-
-            double BUCKET_IDLE = 0;
-            double BUCKET_RELEASE = 1;
-
-            double RELEASE_TIME = 5000;
-
-            ElapsedTime releaseTimer = new ElapsedTime();
-
-            static double speed = 1200; //arbitrary number; static to allow for analyzing how PID performs through multiple speeds in dashboard
-
-            public static PIDCoefficients pidCoeffs = new PIDCoefficients(0, 0, 0); //PID coefficients that need to be tuned probably through FTC dashboard
-            public PIDCoefficients pidGains = new PIDCoefficients(0, 0, 0); //PID gains which we will define later in the process
-
-            ElapsedTime PIDTimer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS); //timer
 
 
-            public void loop () {
+
+
+            /*
+            public void loop() {
                 switch (liftstates) {
                     case LiftStates.LIFT_START:
                         // Waiting for some input
@@ -113,4 +119,7 @@ public class ShippingHubAutomationLevels extends LinearOpMode {
 
                 }
             }
+            */
         }
+    }
+}
