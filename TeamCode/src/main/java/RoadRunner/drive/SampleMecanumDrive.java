@@ -39,12 +39,12 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
-import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
-import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuilder;
-import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceRunner;
-import org.firstinspires.ftc.teamcode.util.AxisDirection;
-import org.firstinspires.ftc.teamcode.util.BNO055IMUUtil;
-import org.firstinspires.ftc.teamcode.util.LynxModuleUtil;
+import trajectorysequence.TrajectorySequence;
+import trajectorysequence.TrajectorySequenceBuilder;
+import trajectorysequence.TrajectorySequenceRunner;
+import util.AxisDirection;
+import util.BNO055IMUUtil;
+import util.LynxModuleUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -118,7 +118,8 @@ public class SampleMecanumDrive extends MecanumDrive {
         // and the placement of the dot/orientation from https://docs.revrobotics.com/rev-control-system/control-system-overview/dimensions#imu-location
         //
         // For example, if +Y in this diagram faces downwards, you would use AxisDirection.NEG_Y.
-         BNO055IMUUtil.remapZAxis(imu, AxisDirection.NEG_Z);
+        BNO055IMUUtil.remapZAxis(imu, AxisDirection.NEG_Y);
+
 
         frontLeft = hardwareMap.get(DcMotorEx.class, "FrontLeft");
         backLeft = hardwareMap.get(DcMotorEx.class, "BackLeft");
@@ -144,8 +145,10 @@ public class SampleMecanumDrive extends MecanumDrive {
         }
 
         // TODO: reverse any motors using DcMotor.setDirection()
-        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeft.setDirection(DcMotor.Direction.FORWARD);
+        frontRight.setDirection(DcMotor.Direction.REVERSE);
+        backLeft.setDirection(DcMotor.Direction.FORWARD);
+        backRight.setDirection(DcMotor.Direction.REVERSE);
 
         // TODO: if desired, use setLocalizer() to change the localization method
         // for instance, setLocalizer(new ThreeTrackingWheelLocalizer(...));
@@ -309,7 +312,7 @@ public class SampleMecanumDrive extends MecanumDrive {
         // expected). This bug does NOT affect orientation. 
         //
         // See https://github.com/FIRST-Tech-Challenge/FtcRobotController/issues/251 for details.
-        return (double) -imu.getAngularVelocity().zRotationRate;
+        return (double) imu.getAngularVelocity().zRotationRate;
     }
 
     public static TrajectoryVelocityConstraint getVelocityConstraint(double maxVel, double maxAngularVel, double trackWidth) {

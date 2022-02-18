@@ -26,6 +26,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 @Autonomous
 public class PickUpMarker extends LinearOpMode {
+
   //Motors
   private DcMotorEx frontRight;
   private DcMotorEx frontLeft;
@@ -148,7 +149,7 @@ public class PickUpMarker extends LinearOpMode {
     sleep(time);
     stopAll();
   }
-  private void stopAll () {
+  private void stopAll() {
     frontRight.setPower(0);
     frontLeft.setPower(0);
     backRight.setPower(0);
