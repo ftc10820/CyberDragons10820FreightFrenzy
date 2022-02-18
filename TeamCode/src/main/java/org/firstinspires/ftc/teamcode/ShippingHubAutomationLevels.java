@@ -77,30 +77,30 @@ public class ShippingHubAutomationLevels extends LinearOpMode {
                 LIFT_LEVELTWO,
                 LIFT_LEVELTHREE;
             }
-                LiftStates liftstates = LiftStates.LIFT_START;
+            LiftStates liftstates = LiftStates.LIFT_START;
 
-                int LINEAR_SLIDE_HIGH = -150;
-                int LINEAR_SLIDE_LOW = -15;
+            int LINEAR_SLIDE_HIGH = -150;
+            int LINEAR_SLIDE_LOW = -15;
 
-                int BUCKET_TURNER_HIGH = -30;
-                int BUCKET_TURNER_LOW = -20;
+            int BUCKET_TURNER_HIGH = -30;
+            int BUCKET_TURNER_LOW = -20;
 
-                double BUCKET_IDLE = 0;
-                double BUCKET_RELEASE = 1;
+            double BUCKET_IDLE = 0;
+            double BUCKET_RELEASE = 1;
 
-                double RELEASE_TIME = 5000;
+            double RELEASE_TIME = 5000;
 
-                ElapsedTime releaseTimer = new ElapsedTime();
+            ElapsedTime releaseTimer = new ElapsedTime();
 
-                public static double speed = 1200; //arbitrary number; static to allow for analyzing how PID performs through multiple speeds in dashboard
+            static double speed = 1200; //arbitrary number; static to allow for analyzing how PID performs through multiple speeds in dashboard
 
-                public static PIDCoefficients pidCoeffs = new PIDCoefficients(0, 0, 0); //PID coefficients that need to be tuned probably through FTC dashboard
-                public PIDCoefficients pidGains = new PIDCoefficients(0, 0, 0); //PID gains which we will define later in the process
+            public static PIDCoefficients pidCoeffs = new PIDCoefficients(0, 0, 0); //PID coefficients that need to be tuned probably through FTC dashboard
+            public PIDCoefficients pidGains = new PIDCoefficients(0, 0, 0); //PID gains which we will define later in the process
 
-                ElapsedTime PIDTimer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS); //timer
+            ElapsedTime PIDTimer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS); //timer
 
 
-            public void loop() {
+            public void loop () {
                 switch (liftstates) {
                     case LiftStates.LIFT_START:
                         // Waiting for some input
@@ -111,4 +111,6 @@ public class ShippingHubAutomationLevels extends LinearOpMode {
                         }
                         break;
 
+                }
+            }
         }
