@@ -48,7 +48,7 @@ public class TestMecanumChassis extends LinearOpMode {
     public DcMotorEx backRight;
     
     public DcMotor bucket;
-    public DcMotor linearSlide;
+    public DcMotor armMotor;
     public DcMotor carouselTurner;
     public DcMotor bucketTurner;
     
@@ -96,37 +96,37 @@ public class TestMecanumChassis extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            
-            x = gamepad1.left_stick_x;
-            y = -gamepad1.left_stick_y;
-            turn = gamepad1.right_stick_x;
-          
-            theta = Math.atan2(y, x);
-            power = Math.hypot(x, y);
+
+            float x = gamepad1.left_stick_x;
+            float y = -gamepad1.left_stick_y;
+            float turn = gamepad1.right_stick_x;
+
+            double theta = Math.atan2(y, x);
+            double power = Math.hypot(x, y);
           
             // input: theta, power, and turn
-            sin = Math.sin(theta - Math.PI/4);
-            cos = Math.cos(theta - Math.PI/4);
-            max = Math.max(Math.abs(sin), Math.abs(cos));
+            double sin = Math.sin(theta - Math.PI/4);
+            double cos = Math.cos(theta - Math.PI/4);
+            double max = Math.max(Math.abs(sin), Math.abs(cos));
             
-            frontLeftPower = power * cos/max + turn;
-            frontRightPower = power * sin/max - turn;
-            backLeftPower = power * cos/max - turn;
-            backRightPower = power * cos/max - turn;
+            double frontLeftPower = power * cos/max + turn;
+            double frontRightPower = power * sin/max - turn;
+            double backLeftPower = power * cos/max - turn;
+            double backRightPower = power * cos/max - turn;
           
             if ((power + Math.abs(turn)) > 1) {
             
-              frontLeft /= power + turn;
-              frontRight /= power + turn;
-              backLeft /= power + turn;
-              backRight /= power + turn;
+              frontLeftPower /= power + turn;
+              frontRightPower /= power + turn;
+              backLeftPower /= power + turn;
+              backRightPower /= power + turn;
             
             
             }
             
             frontLeft.setPower(frontLeftPower);
             frontRight.setPower(frontRightPower);
-            backLeft.setPowr(backLeftPower);
+            backLeft.setPower(backLeftPower);
             backRight.setPower(backRightPower);
           
             
@@ -205,11 +205,11 @@ public class TestMecanumChassis extends LinearOpMode {
         
         bucket = hardwareMap.get(DcMotor.class,"Bucket");
         bucketTurner = hardwareMap.get(DcMotor.class, "BucketTurner" );
-        linearSlide = hardwareMap.get(DcMotor.class, "LinearSlide");
+        armMotor = hardwareMap.get(DcMotor.class, "ArmMotor");
         carouselTurner = hardwareMap.get(DcMotor.class, "CarouselTurner" );
 
 
-        linearSlide.setDirection(DcMotor.Direction.FORWARD);
+        armMotor.setDirection(DcMotor.Direction.FORWARD);
         
         
         bucket.setDirection(DcMotor.Direction.FORWARD);
