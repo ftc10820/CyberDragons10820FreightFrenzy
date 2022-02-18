@@ -57,6 +57,9 @@ public class PickUpMarker extends LinearOpMode {
     while (opModeIsActive()) {
       moveArmUp(1, 500);
       /*
+      while(armMotor.getVelocity <= 1){
+        moveArmDown(1, 0);
+      }
       moveBack(.5, 500);
       moveArmDown(1, 500);
       moveForward(.5, 500);
@@ -84,6 +87,8 @@ public class PickUpMarker extends LinearOpMode {
     distanceCarousel = hardwareMap.get(DistanceSensor.class, "distanceCarousel");
     distanceIntake = hardwareMap.get(DistanceSensor.class, "distanceIntake");
     colorFront = hardwareMap.get(ColorSensor.class, "colorFront");
+
+    armMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
   }
 
   private void moveArmUp(double power, int time) {
