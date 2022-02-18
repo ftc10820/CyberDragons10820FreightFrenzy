@@ -48,7 +48,7 @@ public class TestMecanumChassis extends LinearOpMode {
     public DcMotorEx backRight;
     
     public DcMotor bucket;
-    public DcMotor linearSlide;
+    public DcMotor armMotor;
     public DcMotor carouselTurner;
     public DcMotor bucketTurner;
     
@@ -205,11 +205,11 @@ public class TestMecanumChassis extends LinearOpMode {
         
         bucket = hardwareMap.get(DcMotor.class,"Bucket");
         bucketTurner = hardwareMap.get(DcMotor.class, "BucketTurner" );
-        linearSlide = hardwareMap.get(DcMotor.class, "LinearSlide");
+        armMotor = hardwareMap.get(DcMotor.class, "ArmMotor");
         carouselTurner = hardwareMap.get(DcMotor.class, "CarouselTurner" );
 
 
-        linearSlide.setDirection(DcMotor.Direction.FORWARD);
+        armMotor.setDirection(DcMotor.Direction.FORWARD);
         
         
         bucket.setDirection(DcMotor.Direction.FORWARD);

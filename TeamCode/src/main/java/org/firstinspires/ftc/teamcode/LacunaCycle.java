@@ -67,7 +67,7 @@ import com.qualcomm.robotcore.hardware.Servo;
         }
     }
 
-        private void initializeRobot () {
+    private void initializeRobot() {
 
         frontLeft = hardwareMap.get(DcMotorEx.class, "FrontLeft");
         frontRight = hardwareMap.get(DcMotorEx.class, "FrontRight");
@@ -89,7 +89,7 @@ import com.qualcomm.robotcore.hardware.Servo;
     }
 
 
-        private void moveForward ( double power, int time){
+    private void moveForward(double power, int time) {
         frontRight.setPower(power);
         frontLeft.setPower(power);
         backRight.setPower(power);
@@ -97,7 +97,8 @@ import com.qualcomm.robotcore.hardware.Servo;
         sleep(time);
         stopWheel();
     }
-        private void moveBack ( double power, int time){
+
+    private void moveBack(double power, int time) {
         frontRight.setPower(power * -1);
         frontLeft.setPower(power * -1);
         backRight.setPower(power * -1);
@@ -105,7 +106,8 @@ import com.qualcomm.robotcore.hardware.Servo;
         sleep(time);
         stopWheel();
     }
-        private void moveLeft ( double power, int time){
+
+    private void moveLeft(double power, int time) {
         frontRight.setPower(power);
         backRight.setPower(power * -1);
         frontLeft.setPower(power * -1);
@@ -113,7 +115,8 @@ import com.qualcomm.robotcore.hardware.Servo;
         sleep(time);
         stopWheel();
     }
-        private void moveRight ( double power, int time){
+
+    private void moveRight(double power, int time) {
         frontRight.setPower(power * -1);
         backRight.setPower(power);
         frontLeft.setPower(power);
@@ -121,13 +124,15 @@ import com.qualcomm.robotcore.hardware.Servo;
         sleep(time);
         stopWheel();
     }
-        private void stopWheel () {
+
+    private void stopWheel() {
         frontRight.setPower(0);
         frontLeft.setPower(0);
         backRight.setPower(0);
         backLeft.setPower(0);
     }
-        private void turnRight ( double power, int time){
+
+    private void turnRight(double power, int time) {
         frontRight.setPower(power);
         backRight.setPower(power);
         frontLeft.setPower(power * -1);
@@ -135,14 +140,19 @@ import com.qualcomm.robotcore.hardware.Servo;
         sleep(time);
         stopWheel();
     }
-        private void turnLeft ( double power, int time){
+
+    private void turnLeft(double power, int time) {
         frontRight.setPower(power * -1);
         backRight.setPower(power * -1);
         frontLeft.setPower(power);
         backLeft.setPower(power);
         sleep(time);
 
-        private void pickupFreight (double power){
+
+    }
+
+    private void pickupFreight ( double power){
         bucket.setPower(power);
-            }
+    }
+
 }
