@@ -58,9 +58,7 @@ public class PickUpMarker extends LinearOpMode {
     while (opModeIsActive()) {
       moveArmUp(1, 1000);
       /*
-      while(armMotor.getVelocity <= 1){
-        moveArmDown(1, 0);
-      }
+      moveArmDown(1, 0);
       moveBack(.5, 500);
       moveArmDown(1, 500);
       moveForward(.5, 500);
