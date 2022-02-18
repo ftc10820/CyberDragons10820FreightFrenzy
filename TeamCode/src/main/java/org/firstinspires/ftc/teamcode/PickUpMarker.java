@@ -94,12 +94,12 @@ public class PickUpMarker extends LinearOpMode {
   private void moveArmUp(double power, int time) {
     armMotor.setPower(power);
     sleep(time);
-    armMotor.setPower(0);
+    stopAll();
   }
   private void moveArmDown(double power, int time) {
     armMotor.setPower(power*-1);
     sleep(time);
-    armMotor.setPower(0);
+    stopAll();
   }
   private void moveForward ( double power, int time){
     frontRight.setPower(power);
@@ -107,7 +107,7 @@ public class PickUpMarker extends LinearOpMode {
     backRight.setPower(power);
     backLeft.setPower(power);
     sleep(time);
-    stopWheel();
+    stopAll();
   }
   private void moveBack ( double power, int time){
     frontRight.setPower(power * -1);
@@ -115,7 +115,7 @@ public class PickUpMarker extends LinearOpMode {
     backRight.setPower(power * -1);
     backLeft.setPower(power * -1);
     sleep(time);
-    stopWheel();
+    stopAll();
   }
   private void moveLeft ( double power, int time){
     frontRight.setPower(power);
@@ -123,7 +123,7 @@ public class PickUpMarker extends LinearOpMode {
     frontLeft.setPower(power * -1);
     backLeft.setPower(power);
     sleep(time);
-    stopWheel();
+    stopAll();
   }
   private void moveRight ( double power, int time){
     frontRight.setPower(power * -1);
@@ -131,7 +131,7 @@ public class PickUpMarker extends LinearOpMode {
     frontLeft.setPower(power);
     backLeft.setPower(power * -1);
     sleep(time);
-    stopWheel();
+    stopAll();
   }
   private void turnLeft ( double power, int time){
     backRight.setPower(power * -1);
@@ -146,12 +146,13 @@ public class PickUpMarker extends LinearOpMode {
     frontLeft.setPower(power * -1);
     backLeft.setPower(power * -1);
     sleep(time);
-    stopWheel();
+    stopAll();
   }
-  private void stopWheel () {
+  private void stopAll () {
     frontRight.setPower(0);
     frontLeft.setPower(0);
     backRight.setPower(0);
     backLeft.setPower(0);
+    armMotor.setPower(0);
   }
 }
