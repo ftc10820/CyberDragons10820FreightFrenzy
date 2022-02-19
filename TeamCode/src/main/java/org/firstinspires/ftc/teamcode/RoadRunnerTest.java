@@ -11,6 +11,8 @@ public class RoadRunnerTest extends LinearOpMode {
 
     public void runOpMode() throws InterruptedException {
 
+
+
         org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive drive = new org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive(hardwareMap);
 
         Pose2d startPose = new Pose2d(-35, 65, Math.toRadians(-90));
@@ -18,11 +20,11 @@ public class RoadRunnerTest extends LinearOpMode {
         drive.setPoseEstimate(startPose);
 
         Trajectory carouselTurner = drive.trajectoryBuilder(startPose)
-                .strafeTo(new Vector2d(-70, 65))
+                .strafeTo(new Vector2d(0, 65))
                 .build();
 
         Trajectory shippingHub = drive.trajectoryBuilder(carouselTurner.end())
-                .splineToConstantHeading(new Vector2d(-15, 40), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(-60, 60), Math.toRadians(0))
                 .build();
 
         Trajectory parkWarehouse = drive.trajectoryBuilder(shippingHub.end())
@@ -37,8 +39,8 @@ public class RoadRunnerTest extends LinearOpMode {
             // do carousel
             drive.followTrajectory(shippingHub);
             // place freight
-            drive.turn(Math.toRadians(90));
-            drive.followTrajectory(parkWarehouse);
+            //drive.turn(Math.toRadians(90));
+            //drive.followTrajectory(parkWarehouse);
 
 
         }
