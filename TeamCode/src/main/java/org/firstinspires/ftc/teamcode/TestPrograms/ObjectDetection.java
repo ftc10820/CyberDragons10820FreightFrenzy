@@ -27,13 +27,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.TestPrograms;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-
 import java.util.List;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -52,7 +50,8 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
  * is explained below.
  */
 @TeleOp
-public class AutonomousPathing extends LinearOpMode {
+
+public class ObjectDetection extends LinearOpMode {
   /* Note: This sample uses the all-objects Tensor Flow model (FreightFrenzy_BCDM.tflite), which contains
    * the following 4 detectable objects
    *  0: Ball,
@@ -71,11 +70,6 @@ public class AutonomousPathing extends LinearOpMode {
       "Duck",
       "Marker"
     };
-  
-    private DcMotor FrontRight;
-    private DcMotor FrontLeft;
-    private DcMotor BackRight;
-    private DcMotor BackLeft;
 
     /*
      * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
@@ -90,7 +84,7 @@ public class AutonomousPathing extends LinearOpMode {
      * and paste it in to your code on the next line, between the double quotes.
      */
     private static final String VUFORIA_KEY =
-            " -- YOUR NEW VUFORIA KEY GOES HERE  --- ";
+            "ARAjd5v/////AAABmQ6iQJD2QkgYuX/cCgoLeJtQwAvDgu+2L6atBnCINrvbLCKGuyow1XyTKBZ+OSztPsb0+FJJOwkhD2KL4WI1bjz6+FevU72cCzf9WGwGDvXprFwvbnJV0Il0z2J8y2UNYlukyTIhFKD08b2Rt+0Zv5HWRnvSI6pf5Sbg3WIeQ9v9O4dkki0W0LKz1gYEPpTTOosJO4otCxWvdANs6ZZ21Efr0tFvpR8T0CgbB8EdzRCnnknTglsOsfp03zVSfS7TBLR26QM/kNVF6RBeWMKB1v5juqmohB2tNtdqxL1uQlakmyiY8YmeuPozSyEHYv94cvn6aonUvFw7HLIP4rLe14gsg01I5aHBOizXQtVzShWj";
 
     /**
      * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
@@ -124,7 +118,7 @@ public class AutonomousPathing extends LinearOpMode {
             // to artificially zoom in to the center of image.  For best results, the "aspectRatio" argument
             // should be set to the value of the images used to create the TensorFlow Object Detection model
             // (typically 16/9).
-            tfod.setZoom(2.5, 16.0/9.0);
+            tfod.setZoom(2.5, 2.0/2.0);
         }
 
         /** Wait for the game to begin */
@@ -133,8 +127,7 @@ public class AutonomousPathing extends LinearOpMode {
         waitForStart();
 
         if (opModeIsActive()) {
-            
-          while (opModeIsActive()) {
+            while (opModeIsActive()) {
                 if (tfod != null) {
                     // getUpdatedRecognitions() will return null if no new information is available since
                     // the last time that call was made.
@@ -154,15 +147,7 @@ public class AutonomousPathing extends LinearOpMode {
                       telemetry.update();
                     }
                 }
-              
-              
-              
-              
             }
-          
-          
-          
-          
         }
     }
 
@@ -197,22 +182,5 @@ public class AutonomousPathing extends LinearOpMode {
        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
     }
-  
-    private void moveForwardPower(double power) {
-    
-      BackRight.setPower(power);
-      FrontRight.setPower(power);
-      BackLeft.setPower(power);
-      FrontLeft.setPower(power);
-    
-    }
-  
-    private void moveBackwardPower(double power) {
-    
-      BackRight.setPower(power * -1.0);
-      FrontRight.setPower(power * -1.0);
-      BackLeft.setPower(power * -1.0);
-      FrontLeft.setPower(power * -1.0);
-    
-    }
 }
+
