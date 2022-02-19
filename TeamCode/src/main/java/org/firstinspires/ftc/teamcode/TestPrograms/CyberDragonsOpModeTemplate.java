@@ -16,7 +16,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-//uncomment the mode, whether it be teleop or autonomous
+//uncomment the mode, whether it be tele-op or autonomous
 //@TeleOp
 //@Autonomous
 public class CyberDragonsOpModeTemplate extends LinearOpMode {
