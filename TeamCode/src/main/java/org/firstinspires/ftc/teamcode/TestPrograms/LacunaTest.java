@@ -14,15 +14,22 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 @TeleOp
 public class LacunaTest extends LinearOpMode {
 
+    //Motors
     private DcMotorEx frontRight;
     private DcMotorEx frontLeft;
     private DcMotorEx backLeft;
     private DcMotorEx backRight;
 
+    //Arm + Other Motors
     private DcMotorEx bucket;
     private DcMotorEx bucketTurner;
     private DcMotorEx armMotor;
+    private DcMotorEx carouselTurner;
 
+    //Servos
+    private Servo intakeServo;
+
+    //Sensors
     private DistanceSensor distanceLeftFront;
     private DistanceSensor distanceLeftBack;
     private DistanceSensor distanceRightFront;
@@ -31,10 +38,8 @@ public class LacunaTest extends LinearOpMode {
     private DistanceSensor distanceIntake;
     private ColorSensor colorFront;
 
-    //private Servo intakeServo;
-
-
-    public void runOpMode() {
+    @Override
+    public void runOpMode() throws InterruptedException {
 
         //initialization
         initializeRobot();
@@ -79,17 +84,25 @@ public class LacunaTest extends LinearOpMode {
         }
     }
 
+    // add functions here
     private void initializeRobot() {
 
+        // initializing drive wheels
         frontLeft = hardwareMap.get(DcMotorEx.class, "FrontLeft");
         frontRight = hardwareMap.get(DcMotorEx.class, "FrontRight");
         backLeft = hardwareMap.get(DcMotorEx.class, "BackLeft");
         backRight = hardwareMap.get(DcMotorEx.class, "BackRight");
 
+        // initializing other motors
         bucket = hardwareMap.get(DcMotorEx.class, "Bucket");
         bucketTurner = hardwareMap.get(DcMotorEx.class, "BucketTurner");
         armMotor = hardwareMap.get(DcMotorEx.class, "ArmMotor");
+        carouselTurner = hardwareMap.get(DcMotorEx.class, "CarouselTurner");
 
+        //initialize servo
+        intakeServo = hardwareMap.get(Servo.class, "intakeServo");
+
+        // initializing sensors
         distanceLeftFront = hardwareMap.get(DistanceSensor.class, "distanceLeftFront");
         distanceLeftBack = hardwareMap.get(DistanceSensor.class, "distanceLeftBack");
         distanceRightFront = hardwareMap.get(DistanceSensor.class, "distanceRightFront");
@@ -97,27 +110,55 @@ public class LacunaTest extends LinearOpMode {
         distanceFront = hardwareMap.get(DistanceSensor.class, "distanceFront");
         distanceIntake = hardwareMap.get(DistanceSensor.class, "distanceIntake");
         colorFront = hardwareMap.get(ColorSensor.class, "colorFront");
+        //add imu later
 
-        // configuring the drive motors
-        frontLeft.setDirection(DcMotor.Direction.FORWARD) ;
-        frontRight.setDirection(DcMotor.Direction.REVERSE) ;
-        backLeft.setDirection(DcMotor.Direction.FORWARD) ;
-        backRight.setDirection(DcMotor.Direction.REVERSE) ;
+        // sets the motors to use encoders
+        frontLeft.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        frontRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        backLeft.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        backRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
+        armMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        bucket.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        bucketTurner.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        carouselTurner.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+
+        //reset encoders
+        frontLeft.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        frontRight.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        backLeft.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        backRight.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+
+        armMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        bucket.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        bucketTurner.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        carouselTurner.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+
+        // sets the motors to brake when there is no power applied (motor tries to actively maintain position)
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        // configuring the other motors
-        armMotor.setDirection(DcMotor.Direction.FORWARD) ;
-        bucketTurner.setDirection(DcMotor.Direction.REVERSE) ;
-        bucket.setDirection(DcMotor.Direction.FORWARD) ;
-
         armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        bucketTurner.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bucket.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        bucketTurner.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        carouselTurner.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        //set direction of drive motors
+        frontLeft.setDirection(DcMotor.Direction.FORWARD);
+        frontRight.setDirection(DcMotor.Direction.REVERSE);
+        backLeft.setDirection(DcMotor.Direction.FORWARD);
+        backRight.setDirection(DcMotor.Direction.REVERSE);
+
+        //set direction of other motors
+        armMotor.setDirection(DcMotor.Direction.FORWARD);
+        bucketTurner.setDirection(DcMotor.Direction.REVERSE);
+        bucket.setDirection(DcMotor.Direction.FORWARD);
+        carouselTurner.setDirection(DcMotor.Direction.FORWARD);
+
     }
+
 
 
     private void moveForward(double power, int time) {
