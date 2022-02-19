@@ -58,16 +58,43 @@ public class DropOffMarker extends LinearOpMode {
 		armMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
     bucketTurner.setPower(.5);
     armMotor.setPower(.5);
+    while(bucketTurner.isBusy()||armMotor.isBusy()){
+      ;
+    }
     frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-    bucketTurner.setTargetPosition(-98);
-    armMotor.setTargetPosition(900);
+    bucketTurner.setTargetPosition(-185);
+		armMotor.setTargetPosition(1056);
     frontLeft.setTargetPosition(386);
     frontRight.setTargetPosition(-396);
     backLeft.setTargetPosition(391);
     backRight.setTargetPosition(-391);
+    bucketTurner.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+    armMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+    frontLeft.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+    frontRight.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+    backLeft.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+    backRight.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+    bucketTurner.setPower(.5);
+    armMotor.setPower(.5);
+    frontLeft.setPower(1);
+    frontRight.setPower(1);
+    backLeft.setPower(1);
+    backRight.setPower(1);
+    while(bucketTurner.isBusy()||armMotor.isBusy||frontLeft.isBusy()||frontRight.isBusy()||backLeft.isBusy()||backRight.isBusy()){
+      ;
+    }
+    bucketTurner.setTargetPosition(-98);
+    armMotor.setTargetPosition(900);
+    bucketTurner.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+    armMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+    bucketTurner.setPower(.5);
+    armMotor.setPower(.5);
+    while(bucketTurner.isBusy()||armMotor.isBusy){
+      ;
+    }
     /*
     frontLeft.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
 		frontRight.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
@@ -78,9 +105,6 @@ public class DropOffMarker extends LinearOpMode {
 		backLeft.setPower(1);
 		backRight.setPower(1);
     */
-		while(bucketTurner.isBusy()||armMotor.isBusy()/*||frontLeft.isBusy()||frontRight.isBusy()||backLeft.isBusy()||backRight.isBusy()*/){
-		  ;
-		}
     sleep(5000);
 		/*
 		//Used to see the Encoder Values easy
@@ -130,6 +154,10 @@ public class DropOffMarker extends LinearOpMode {
 	armMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 	bucketTurner.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 
+  frontLeft.setDirection(DcMotor.Direction.FORWARD);
+  frontRight.setDirection(DcMotor.Direction.REVERSE);
+  backLeft.setDirection(DcMotor.Direction.FORWARD);
+  backRight.setDirection(DcMotor.Direction.REVERSE);
 	bucketTurner.setDirection(DcMotorEx.Direction.REVERSE);
 	/*
 	armMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
