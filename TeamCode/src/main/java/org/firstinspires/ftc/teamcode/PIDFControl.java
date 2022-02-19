@@ -82,7 +82,7 @@ public class PIDFControl extends LinearOpMode {
 		// to 'get' must correspond to the names assigned during the robot configuration
 		// step (using the FTC Robot Controller app on the phone).
 
-		// Most robots need the motor on one side to be reversed to drive forward
+		// Most robots need the motor on one side to be reversed to org.firstinspires.ftc.teamcode.drive forward
 		// Reverse the motor that runs backwards when connected directly to the battery
 
 
@@ -115,7 +115,7 @@ public class PIDFControl extends LinearOpMode {
 	}
 
 	/**
-	 * Initialize the mecanum drive with PID.
+	 * Initialize the mecanum org.firstinspires.ftc.teamcode.drive with PID.
 	 */
 	public void initializeRobot() {
 
