@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 @Autonomous
-public class BrendanTest extends LinearOpMode {
+public class PickUpMarker extends LinearOpMode {
   //Motors
   private DcMotorEx frontRight;
   private DcMotorEx frontLeft;
