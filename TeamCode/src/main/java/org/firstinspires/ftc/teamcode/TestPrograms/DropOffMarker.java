@@ -65,12 +65,12 @@ public class DropOffMarker extends LinearOpMode {
     frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-    bucketTurner.setTargetPosition(-185);
+    bucketTurner.setTargetPosition(185);
 		armMotor.setTargetPosition(1056);
     frontLeft.setTargetPosition(386);
-    frontRight.setTargetPosition(-396);
+    frontRight.setTargetPosition(396);
     backLeft.setTargetPosition(391);
-    backRight.setTargetPosition(-391);
+    backRight.setTargetPosition(391);
     bucketTurner.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
     armMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
     frontLeft.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
