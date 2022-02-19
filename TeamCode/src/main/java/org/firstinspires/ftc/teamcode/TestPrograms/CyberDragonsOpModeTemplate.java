@@ -68,7 +68,7 @@ public class CyberDragonsOpModeTemplate extends LinearOpMode {
     }
 
     // add functions here
-    private void initializeRobot() {
+    public void initializeRobot() {
 
         // initializing drive wheels
         frontLeft = hardwareMap.get(DcMotorEx.class, "FrontLeft");
@@ -196,7 +196,6 @@ public class CyberDragonsOpModeTemplate extends LinearOpMode {
 
 
     }
-
 
 }
 
