@@ -21,16 +21,14 @@ public class RoadRunnerTest extends LinearOpMode {
 
         Trajectory mytrajectory= drive. trajectoryBuilder(new Pose2d())
                 .strafeTo(new Vector2d(0,10))
-                .build()
+                .build();
 
         waitForStart();
 
         if (opModeIsActive()) {
 
-            drive.followTrajectory(carouselTurner);
-            // do carousel
-            drive.followTrajectory(shippingHub);
-            // place freight
+            drive.followTrajectory(mytrajectory);
+            // test for Harshmit
             //drive.turn(Math.toRadians(90));
             //drive.followTrajectory(parkWarehouse);
 
