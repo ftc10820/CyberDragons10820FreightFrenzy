@@ -53,6 +53,7 @@ public class LacunaTest extends LinearOpMode {
 
 
             pickupFreight(1);
+            sleep(100);
             moveArm(1, 1000);
             sleep(100);
             turnLeft(1, 700);
