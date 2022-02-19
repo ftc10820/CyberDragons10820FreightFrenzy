@@ -27,33 +27,42 @@ public class LacunaTest extends LinearOpMode {
     private DistanceSensor distanceLeftBack;
     private DistanceSensor distanceRightFront;
     private DistanceSensor distanceRightBack;
-    //private DistanceSensor distanceFront;
-    private DistanceSensor distanceCarousel;
+    private DistanceSensor distanceFront;
     private DistanceSensor distanceIntake;
     private ColorSensor colorFront;
+
+    //private Servo intakeServo;
 
 
     public void runOpMode() {
 
         //initialization
         initializeRobot();
-
+        telemetry.addData("Status", "Initialized");
+        telemetry.update();
+        //wait for game to start
         waitForStart();
 
         //run during op mode
-        while (opModeIsActive()) {
+        if (opModeIsActive()) {
 
 
-            pickupFreight(1, 0);
-            /*moveArm(1, 2000);
-            moveArm(0);
-            moveBack(1, 1000);
-            turnRight(1, 1000);
-            dropFreight(1, 1000);
-            turnLeft(1, 1000);
-            moveForward(1, 1000);
+            pickupFreight(1);
+            moveArm(1, 1000);
+            sleep(100);
+            turnLeft(1, 700);
+            sleep(100);
+            moveRight(1, 200);
+            sleep(100);
+            moveForward(1,200);
+            /*turnRight(1,150);
+            //dropFreight(1, 1000);
+            turnLeft(1, 150);
+            moveRight(1,200);
+            moveBack(1,200);
+            turnRight(1,700);
+            moveLeft(1,200);
             */
-
 
 
 
@@ -85,10 +94,29 @@ public class LacunaTest extends LinearOpMode {
         distanceLeftBack = hardwareMap.get(DistanceSensor.class, "distanceLeftBack");
         distanceRightFront = hardwareMap.get(DistanceSensor.class, "distanceRightFront");
         distanceRightBack = hardwareMap.get(DistanceSensor.class, "distanceRightBack");
-        //distanceFront = hardwareMap.get(DistanceSensor.class, "distanceFront");
-        distanceCarousel = hardwareMap.get(DistanceSensor.class, "distanceCarousel");
+        distanceFront = hardwareMap.get(DistanceSensor.class, "distanceFront");
         distanceIntake = hardwareMap.get(DistanceSensor.class, "distanceIntake");
         colorFront = hardwareMap.get(ColorSensor.class, "colorFront");
+
+        // configuring the drive motors
+        frontLeft.setDirection(DcMotor.Direction.FORWARD) ;
+        frontRight.setDirection(DcMotor.Direction.REVERSE) ;
+        backLeft.setDirection(DcMotor.Direction.FORWARD) ;
+        backRight.setDirection(DcMotor.Direction.REVERSE) ;
+
+        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        // configuring the other motors
+        armMotor.setDirection(DcMotor.Direction.FORWARD) ;
+        bucketTurner.setDirection(DcMotor.Direction.REVERSE) ;
+        bucket.setDirection(DcMotor.Direction.FORWARD) ;
+
+        armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        bucketTurner.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        bucket.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
 
@@ -150,9 +178,12 @@ public class LacunaTest extends LinearOpMode {
         backLeft.setPower(power);
         sleep(time);
     }
-    private void pickupFreight (double power, int time){
+    private void pickupFreight (double power) {
         bucket.setPower(power);
-        while(distanceIntake.getDistance(DistanceUnit.INCH) < 2.0);
+        while(distanceIntake.getDistance(DistanceUnit.INCH) > 2.0) {
+        telemetry.addData("distanceIntake: ", "" + distanceIntake.getDistance(DistanceUnit.INCH));
+        telemetry.update();
+        }
         bucket.setPower(0);
     }
 
@@ -162,6 +193,8 @@ public class LacunaTest extends LinearOpMode {
 
     private void dropFreight (double power, int time){
         bucketTurner.setPower(power*-1);
+        sleep(200);
+        //intakeServo();
     }
 
 }
