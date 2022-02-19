@@ -140,6 +140,7 @@ public class CyberDragonsOpModeTemplate extends LinearOpMode {
 
     }
 
+
     public void moveBucketToEncoderVal(int encValBuc, double pval) {
 
         bucketTurner.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
