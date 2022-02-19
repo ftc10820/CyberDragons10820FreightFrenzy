@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.TestPrograms;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -21,7 +22,7 @@ public class LacunaTest extends LinearOpMode {
     private DcMotorEx backRight;
 
     //Arm + Other Motors
-    private DcMotorEx bucket;
+    private DcMotor bucket;
     private DcMotorEx bucketTurner;
     private DcMotorEx armMotor;
     private DcMotorEx carouselTurner;
@@ -43,43 +44,48 @@ public class LacunaTest extends LinearOpMode {
 
         //initialization
         initializeRobot();
+
         telemetry.addData("Status", "Initialized");
         telemetry.update();
+
         //wait for game to start
         waitForStart();
 
         //run during op mode
         if (opModeIsActive()) {
 
-
-            pickupFreight(1);
+			/*
+			pickupFreight(1);
+			sleep(100);
+			*/
+            moveArmVelocity(2000, 500);
             sleep(100);
-            moveArm(1, 1000);
-            sleep(100);
-            turnLeft(1, 700);
-            sleep(100);
-            moveRight(1, 200);
-            sleep(100);
-            moveForward(1,200);
-            /*turnRight(1,150);
-            //dropFreight(1, 1000);
-            turnLeft(1, 150);
-            moveRight(1,200);
-            moveBack(1,200);
-            turnRight(1,700);
-            moveLeft(1,200);
-            */
+			/*
+			turnLeft(1, 700);
+			sleep(100);
+			moveRight(1, 200);
+			sleep(100);
+			moveForward(1,200);
+			*/
+			/*turnRight(1,150);
+			//dropFreight(1, 1000);
+			turnLeft(1, 150);
+			moveRight(1,200);
+			moveBack(1,200);
+			turnRight(1,700);
+			moveLeft(1,200);
+			*/
 
 
 
-        /*
-        moveForward(1, 5000);
-        moveBack(1, 5000);
-        moveRight(1, 5000);
-        moveLeft(1, 5000);
-        turnRight(1, 5000);
-        turnLeft(1,5000);
-         */
+		/*
+		moveForward(1, 5000);
+		moveBack(1, 5000);
+		moveRight(1, 5000);
+		moveLeft(1, 5000);
+		turnRight(1, 5000);
+		turnLeft(1,5000);
+		 */
 
 
         }
@@ -120,7 +126,7 @@ public class LacunaTest extends LinearOpMode {
         backRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
         armMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        bucket.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        //bucket.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         bucketTurner.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         carouselTurner.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
@@ -131,7 +137,7 @@ public class LacunaTest extends LinearOpMode {
         backRight.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
 
         armMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        bucket.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        //bucket.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         bucketTurner.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         carouselTurner.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
 
@@ -159,7 +165,6 @@ public class LacunaTest extends LinearOpMode {
         carouselTurner.setDirection(DcMotor.Direction.FORWARD);
 
     }
-
 
 
     private void moveForward(double power, int time) {
@@ -213,6 +218,7 @@ public class LacunaTest extends LinearOpMode {
         sleep(time);
         stopWheel();
     }
+
     private void turnLeft ( double power, int time) {
         frontRight.setPower(power * -1);
         backRight.setPower(power * -1);
@@ -220,20 +226,23 @@ public class LacunaTest extends LinearOpMode {
         backLeft.setPower(power);
         sleep(time);
     }
+
     private void pickupFreight (double power) {
         bucket.setPower(power);
         while(distanceIntake.getDistance(DistanceUnit.INCH) > 2.0) {
-        telemetry.addData("distanceIntake: ", "" + distanceIntake.getDistance(DistanceUnit.INCH));
-        telemetry.update();
+            telemetry.addData("distanceIntake: ", distanceIntake.getDistance(DistanceUnit.INCH));
+            telemetry.update();
         }
         bucket.setPower(0);
     }
 
-    private void moveArm (double power, int time){
-        armMotor.setPower(power);
+    private void moveArmVelocity (double vel, int time) {
+        armMotor.setVelocity(vel);
+        sleep(time);
+        armMotor.setVelocity(0);
     }
 
-    private void dropFreight (double power, int time){
+    private void dropFreight (double power, int time) {
         bucketTurner.setPower(power*-1);
         sleep(200);
         //intakeServo();
