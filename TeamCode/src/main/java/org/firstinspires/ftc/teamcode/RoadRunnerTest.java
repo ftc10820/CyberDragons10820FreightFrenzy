@@ -13,7 +13,7 @@ public class RoadRunnerTest extends LinearOpMode {
 
 
 
-        org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive drive = new org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive(hardwareMap);
+        org.firstinspires.ftc.teamcode.RoadRunner.drive.SampleMecanumDrive drive = new org.firstinspires.ftc.teamcode.RoadRunner.drive.SampleMecanumDrive(hardwareMap);
 
         Pose2d startPose = new Pose2d(-35, 65, Math.toRadians(-90));
 

@@ -88,3 +88,4 @@ lint/tmp/
 java_pid29180.hprof
 java_pid31904.hprof
 java_pid32802.hprof
+*.hprof

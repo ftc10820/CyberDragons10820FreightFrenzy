@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.RoadRunner.drive;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -36,7 +36,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 @TeleOp
-public class TestMecanumChassis extends LinearOpMode {
+public class mecanumwheelchassis extends LinearOpMode {
 
     // Declare OpMode members.
     static double MAX_TICKS_PER_SECOND = 1800.0;
@@ -46,12 +46,14 @@ public class TestMecanumChassis extends LinearOpMode {
     public DcMotorEx frontRight;
     public DcMotorEx backLeft;
     public DcMotorEx backRight;
-    
+
+    /*
     public DcMotor bucket;
-    public DcMotor armMotor;
+    public DcMotor linearSlide;
     public DcMotor carouselTurner;
     public DcMotor bucketTurner;
-    
+    */
+
     //RevBlinkinLedDriver lights;
     //RevBlinkinLedDriver.BlinkinPattern pattern;
     
@@ -96,39 +98,39 @@ public class TestMecanumChassis extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-
-            float x = gamepad1.left_stick_x;
-            float y = -gamepad1.left_stick_y;
-            float turn = gamepad1.right_stick_x;
+            /*
+            double x = gamepad1.left_stick_x;
+            double y = -gamepad1.left_stick_y;
+            double turn = gamepad1.right_stick_x;
 
             double theta = Math.atan2(y, x);
             double power = Math.hypot(x, y);
-          
+
             // input: theta, power, and turn
             double sin = Math.sin(theta - Math.PI/4);
             double cos = Math.cos(theta - Math.PI/4);
             double max = Math.max(Math.abs(sin), Math.abs(cos));
-            
+
             double frontLeftPower = power * cos/max + turn;
             double frontRightPower = power * sin/max - turn;
             double backLeftPower = power * cos/max - turn;
             double backRightPower = power * cos/max - turn;
-          
+
             if ((power + Math.abs(turn)) > 1) {
-            
-              frontLeftPower /= power + turn;
-              frontRightPower /= power + turn;
-              backLeftPower /= power + turn;
-              backRightPower /= power + turn;
-            
-            
+
+                frontLeftPower /= power + turn;
+                frontRightPower /= power + turn;
+                backLeftPower /= power + turn;
+                backRightPower /= power + turn;
+
+
             }
-            
+
             frontLeft.setPower(frontLeftPower);
             frontRight.setPower(frontRightPower);
             backLeft.setPower(backLeftPower);
             backRight.setPower(backRightPower);
-          
+            */
             
             /*
             // rotation 
@@ -142,7 +144,7 @@ public class TestMecanumChassis extends LinearOpMode {
             double backRightPower = x_rotated + y_rotated - t;
             */
             
-            /*            
+
             double y = -gamepad1.left_stick_y; // Remember, this is reversed!
             double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
             double rx = -gamepad1.right_stick_x ;
@@ -154,12 +156,12 @@ public class TestMecanumChassis extends LinearOpMode {
             double backLeftPower = (y - x + rx) / denominator;
             double frontRightPower = (y - x - rx) / denominator;
             double backRightPower = (y + x - rx) / denominator;
-            */
-            
-            
-            
+
+
+
+
             //set motor powers
-            setThrottle(frontLeftPower, frontRightPower, backLeftPower, backRightPower);
+            //setThrottle(frontLeftPower, frontRightPower, backLeftPower, backRightPower);
 
 
 
@@ -196,33 +198,36 @@ public class TestMecanumChassis extends LinearOpMode {
         backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER) ;
         backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER) ;
 
+
         // Optional if you want to compare initial PIDF coefficients; these are restored to factory-set on power-cycle
         // Get the PIDF coefficients for the RUN_USING_ENCODER RunMode
         PIDFCoefficients frontLeftPidfOrig = frontLeft.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
         PIDFCoefficients frontRightPidfOrig = frontRight.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
         PIDFCoefficients backLeftPidfOrig = backLeft.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
         PIDFCoefficients backRightPidfOrig = backRight.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
-        
+
+        /*
         bucket = hardwareMap.get(DcMotor.class,"Bucket");
         bucketTurner = hardwareMap.get(DcMotor.class, "BucketTurner" );
-        armMotor = hardwareMap.get(DcMotor.class, "ArmMotor");
+        linearSlide = hardwareMap.get(DcMotor.class, "LinearSlide");
         carouselTurner = hardwareMap.get(DcMotor.class, "CarouselTurner" );
 
 
-        armMotor.setDirection(DcMotor.Direction.FORWARD);
-        
-        
+        linearSlide.setDirection(DcMotor.Direction.FORWARD);
+
+
         bucket.setDirection(DcMotor.Direction.FORWARD);
- 
+
 
         bucketTurner.setDirection(DcMotor.Direction.REVERSE);
- 
-        
+
+
         carouselTurner.setDirection(DcMotor.Direction.FORWARD);
 
-        
+
         bucketTurner.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        
+        */
+
         //lights = hardwareMap.get(RevBlinkinLedDriver.class, "blinkin");
         //pattern = RevBlinkinLedDriver.BlinkinPattern.RAINBOW_RAINBOW_PALETTE;
         //blinkinLedDriver.setPattern(pattern);
@@ -239,7 +244,7 @@ public class TestMecanumChassis extends LinearOpMode {
         PIDFCoefficients backRightPidfNew = new PIDFCoefficients(MecanumDrive.backRight_kP, MecanumDrive.backRight_kI, MecanumDrive.backRight_kD, MecanumDrive.backRight_kF);
         backRight.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, backRightPidfNew);
         */
-        
+
     }
 
     /**
@@ -309,10 +314,10 @@ public class TestMecanumChassis extends LinearOpMode {
         }
 
         // Set velocities
-        frontLeft.setVelocity(frontLeftVelocity * PID_MecanumDrive.MAX_TICKS_PER_SECOND);
-        frontRight.setVelocity(frontRightVelocity * PID_MecanumDrive.MAX_TICKS_PER_SECOND);
-        backLeft.setVelocity(backLeftVelocity * PID_MecanumDrive.MAX_TICKS_PER_SECOND);
-        backRight.setVelocity(backRightVelocity * PID_MecanumDrive.MAX_TICKS_PER_SECOND);
+        frontLeft.setVelocity(frontLeftVelocity * mecanumwheelchassis.MAX_TICKS_PER_SECOND);
+        frontRight.setVelocity(frontRightVelocity * mecanumwheelchassis.MAX_TICKS_PER_SECOND);
+        backLeft.setVelocity(backLeftVelocity * mecanumwheelchassis.MAX_TICKS_PER_SECOND);
+        backRight.setVelocity(backRightVelocity * mecanumwheelchassis.MAX_TICKS_PER_SECOND);
     }
 
 }

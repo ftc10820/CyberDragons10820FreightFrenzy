@@ -281,7 +281,7 @@ public class FSMTeleOp extends OpMode {
         }
         
         
-        // The carousel and org.firstinspires.ftc.teamcode.drive train can be controlled even when in state machine
+        // The carousel and org.firstinspires.ftc.teamcode.RoadRunner.drive train can be controlled even when in state machine
         if (gamepad2.y) {
             
             carouselTurner.setPower(1);
