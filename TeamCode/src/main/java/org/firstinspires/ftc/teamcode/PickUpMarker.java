@@ -11,17 +11,27 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 @Autonomous
-public class BrendanTest extends LinearOpMode {
+public class PickUpMarker extends LinearOpMode {
   //Motors
-	private DcMotorEx frontLeft;
-	private DcMotorEx frontRight;
-	private DcMotorEx backLeft;
-	private DcMotorEx backRight;
+  private DcMotorEx frontRight;
+  private DcMotorEx frontLeft;
+  private DcMotorEx backLeft;
+  private DcMotorEx backRight;
 
   //Arms/Picking Things Up
-	private DcMotorEx bucket;
-	private DcMotorEx bucketTurner;
-	private DcMotorEx armMotor;
+  private DcMotorEx bucket;
+  private DcMotorEx bucketTurner;
+  private DcMotorEx armMotor;
+
+  //Sensors
+  private DistanceSensor distanceLeftFront;
+  private DistanceSensor distanceLeftBack;
+  private DistanceSensor distanceRightFront;
+  private DistanceSensor distanceRightBack;
+  //private DistanceSensor distanceFront;
+  private DistanceSensor distanceCarousel;
+  private DistanceSensor distanceIntake;
+  private ColorSensor colorFront;
 
   public void runOpMode() {
 
@@ -32,71 +42,24 @@ public class BrendanTest extends LinearOpMode {
 
 	waitForStart();
 	//run during op mode
-	/*
-	Arm: 572
-	Bucket: 0
-	FL: 386
-	FR: -396
-	BL: 391
-	BR: -391
-	*/
-
 	if(opModeIsActive()) {
 		long encoderArmValue;
 		long encoderBucketValue;
-		long encoderFrontLeftValue;
-		long encoderFrontRightValue;
-		long encoderBackLeftValue;
-		long encoderBackRightValue;
-		bucketTurner.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-		armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-		frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-		frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-		backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-		backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-		bucketTurner.setTargetPosition(0);
-		armMotor.setTargetPosition(572);
-		frontLeft.setTargetPosition(386);
-		frontRight.setTargetPosition(-396);
-		backLeft.setTargetPosition(391);
-		backRight.setTargetPosition(-391);
+		bucketTurner.setTargetPosition(15);
+		armMotor.setTargetPosition(230);
 		bucketTurner.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
 		armMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-    /*
-    frontLeft.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-		frontRight.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-		backLeft.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-		backRight.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
 		bucketTurner.setPower(1);
 		armMotor.setPower(1);
-		frontLeft.setPower(1);
-		frontRight.setPower(1);
-		backLeft.setPower(1);
-		backRight.setPower(1);
-    */
-		while(bucketTurner.isBusy()||armMotor.isBusy()/*||frontLeft.isBusy()||frontRight.isBusy()||backLeft.isBusy()||backRight.isBusy()*/){
+		while(bucketTurner.isBusy()||armMotor.isBusy()){
 		  ;
 		}
-		/*
-		//Used to see the Encoder Values easy
-		while(true){
 			encoderArmValue = armMotor.getCurrentPosition();
 			encoderBucketValue = bucketTurner.getCurrentPosition();
-			encoderFrontLeftValue = frontLeft.getCurrentPosition();
-			encoderFrontRightValue = frontRight.getCurrentPosition();
-			encoderBackLeftValue = backLeft.getCurrentPosition();
-			encoderBackRightValue = backRight.getCurrentPosition();
 			telemetry.addData("Arm Encoder Value", + encoderArmValue);
 			telemetry.addData("Bucket Encoder Value", + encoderBucketValue);
-			telemetry.addData("Front Left Encoder Value", + encoderFrontLeftValue);
-			telemetry.addData("Front Right Encoder Value", + encoderFrontRightValue);
-			telemetry.addData("Back Left Encoder Value", + encoderBackLeftValue);
-			telemetry.addData("Back Right Encoder Value", + encoderBackRightValue);
 			telemetry.update();
-		}
-		*/
-
-		//sleep(2000);
+		sleep(2000);
 		/*
 		encoderStartValue = armMotor.getCurrentPosition();
 		armMotor.setVelocity(2000);
@@ -122,10 +85,21 @@ public class BrendanTest extends LinearOpMode {
 	bucketTurner = hardwareMap.get(DcMotorEx.class, "BucketTurner");
 	armMotor = hardwareMap.get(DcMotorEx.class, "ArmMotor");
 
+	distanceLeftFront = hardwareMap.get(DistanceSensor.class, "distanceLeftFront");
+	distanceLeftBack = hardwareMap.get(DistanceSensor.class, "distanceLeftBack");
+	distanceRightFront = hardwareMap.get(DistanceSensor.class, "distanceRightFront");
+	distanceRightBack = hardwareMap.get(DistanceSensor.class, "distanceRightBack");
+	//distanceFront = hardwareMap.get(DistanceSensor.class, "distanceFront");
+	distanceCarousel = hardwareMap.get(DistanceSensor.class, "distanceCarousel");
+	distanceIntake = hardwareMap.get(DistanceSensor.class, "distanceIntake");
+	colorFront = hardwareMap.get(ColorSensor.class, "colorFront");
+
 	armMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 	bucketTurner.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 
 	bucketTurner.setDirection(DcMotorEx.Direction.REVERSE);
+	bucketTurner.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+	armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 	/*
 	armMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 	armMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);

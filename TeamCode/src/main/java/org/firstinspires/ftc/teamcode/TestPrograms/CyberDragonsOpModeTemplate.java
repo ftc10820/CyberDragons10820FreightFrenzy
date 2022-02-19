@@ -28,7 +28,7 @@ public class CyberDragonsOpModeTemplate extends LinearOpMode {
     private DcMotorEx backRight;
 
     //Arm + Other Motors
-    private DcMotorEx bucket;
+    private DcMotor bucket;
     private DcMotorEx bucketTurner;
     private DcMotorEx armMotor;
     private DcMotorEx carouselTurner;
@@ -77,7 +77,7 @@ public class CyberDragonsOpModeTemplate extends LinearOpMode {
         backRight = hardwareMap.get(DcMotorEx.class, "BackRight");
 
         // initializing other motors
-        bucket = hardwareMap.get(DcMotorEx.class, "Bucket");
+        bucket = hardwareMap.get(DcMotor.class, "Bucket");
         bucketTurner = hardwareMap.get(DcMotorEx.class, "BucketTurner");
         armMotor = hardwareMap.get(DcMotorEx.class, "ArmMotor");
         carouselTurner = hardwareMap.get(DcMotorEx.class, "CarouselTurner");
@@ -102,7 +102,6 @@ public class CyberDragonsOpModeTemplate extends LinearOpMode {
         backRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
         armMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        bucket.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         bucketTurner.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         carouselTurner.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
@@ -113,7 +112,6 @@ public class CyberDragonsOpModeTemplate extends LinearOpMode {
         backRight.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
 
         armMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        bucket.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         bucketTurner.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         carouselTurner.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
 
@@ -141,6 +139,64 @@ public class CyberDragonsOpModeTemplate extends LinearOpMode {
         carouselTurner.setDirection(DcMotor.Direction.FORWARD);
 
     }
+
+    public void moveBucketToEncoderVal(int encValBuc, double pval) {
+
+        bucketTurner.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        bucketTurner.setTargetPosition(encValBuc);
+
+        bucketTurner.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        bucketTurner.setPower(pval);
+
+        while (bucketTurner.isBusy()) {
+
+
+        }
+
+    }
+
+    public void moveArmToEncoderVal(int encValArm, double pval) {
+
+        armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        armMotor.setTargetPosition(encValArm);
+
+        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        armMotor.setPower(pval);
+
+        while (armMotor.isBusy()) {
+
+
+        }
+
+    }
+
+    public void armWithBucket(int encValArm, double pvalArm, int encValBuc, double pvalBuc) {
+
+
+            armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            bucketTurner.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+            armMotor.setTargetPosition(encValArm);
+            bucketTurner.setTargetPosition(encValBuc);
+
+            armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            bucketTurner.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            armMotor.setPower(pvalArm);
+            bucketTurner.setPower(pvalBuc);
+
+            while (armMotor.isBusy() || bucketTurner.isBusy()) {
+
+
+            }
+
+
+    }
+
 
 }
 
