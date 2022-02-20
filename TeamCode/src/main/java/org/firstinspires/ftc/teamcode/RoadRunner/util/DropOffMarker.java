@@ -99,6 +99,7 @@ public class DropOffMarker extends LinearOpMode {
     sleep(time);
     stopAll();
   }
+
   private void moveForward ( double power, int time){
     frontRight.setPower(power);
     frontLeft.setPower(power);
@@ -107,6 +108,7 @@ public class DropOffMarker extends LinearOpMode {
     sleep(time);
     stopAll();
   }
+
   private void moveBack ( double power, int time){
     frontRight.setPower(power * -1);
     frontLeft.setPower(power * -1);
@@ -115,6 +117,7 @@ public class DropOffMarker extends LinearOpMode {
     sleep(time);
     stopAll();
   }
+
   private void moveLeft ( double power, int time){
     frontRight.setPower(power);
     backRight.setPower(power * -1);
@@ -123,6 +126,7 @@ public class DropOffMarker extends LinearOpMode {
     sleep(time);
     stopAll();
   }
+
   private void moveRight ( double power, int time){
     frontRight.setPower(power * -1);
     backRight.setPower(power);
@@ -131,6 +135,7 @@ public class DropOffMarker extends LinearOpMode {
     sleep(time);
     stopAll();
   }
+
   private void turnLeft ( double power, int time){
     backRight.setPower(power * -1);
     frontRight.setPower(power * -1);
@@ -138,6 +143,7 @@ public class DropOffMarker extends LinearOpMode {
     backLeft.setPower(power);
     sleep(time);
   }
+
   private void turnRight ( double power, int time){
     frontRight.setPower(power);
     backRight.setPower(power);
@@ -146,6 +152,7 @@ public class DropOffMarker extends LinearOpMode {
     sleep(time);
     stopAll();
   }
+  
   private void stopAll () {
     frontRight.setPower(0);
     frontLeft.setPower(0);

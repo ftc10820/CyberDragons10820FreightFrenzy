@@ -63,22 +63,22 @@ public class Carousel extends CyberDragonsOpModeTemplate {
 
         carouselTimer.reset();
 
-        turnCarousel(0.25);
+        runCarouselVelocity(500);
         while (carouselTimer.milliseconds() < 1000) {
 
         }
 
-        turnCarousel(0.5);
+        runCarouselVelocity(1000);
         while (carouselTimer.milliseconds() < 2000) {
 
         }
 
-        turnCarousel(0.75);
+        runCarouselVelocity(1500);
         while (carouselTimer.milliseconds() < 3000) {
 
         }
 
-        stopCarousel();
+        runCarouselVelocity(0);
 
     }
 }
