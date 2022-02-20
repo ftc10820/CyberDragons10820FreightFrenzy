@@ -198,5 +198,19 @@ public class CyberDragonsOpModeTemplate extends LinearOpMode {
 
     }
 
+    public void turnCarousel(double pval) {
+
+        carouselTurner.setPower(pval);
+
+
+    }
+
+    public void stopCarousel() {
+
+        carouselTurner.setPower(0);
+
+
+    }
+
 }
 

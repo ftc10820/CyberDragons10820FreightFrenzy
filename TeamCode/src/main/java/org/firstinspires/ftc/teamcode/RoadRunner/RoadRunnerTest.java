@@ -6,12 +6,15 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.teamcode.TestPrograms.Carousel;
+import org.firstinspires.ftc.teamcode.TestPrograms.CyberDragonsOpModeTemplate;
+
 @Autonomous
 public class RoadRunnerTest extends LinearOpMode {
 
     public void runOpMode() throws InterruptedException {
 
-
+        org.firstinspires.ftc.teamcode.TestPrograms.Carousel carousel = new Carousel();
 
         org.firstinspires.ftc.teamcode.RoadRunner.drive.SampleMecanumDrive drive = new org.firstinspires.ftc.teamcode.RoadRunner.drive.SampleMecanumDrive(hardwareMap);
 
@@ -37,6 +40,7 @@ public class RoadRunnerTest extends LinearOpMode {
 
             drive.followTrajectory(carouselTurner);
             // do carousel
+            carousel.deliverDuck();
             drive.followTrajectory(shippingHub);
             // place freight
             //drive.turn(Math.toRadians(90));
