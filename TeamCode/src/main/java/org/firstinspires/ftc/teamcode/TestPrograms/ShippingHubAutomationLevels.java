@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.TestPrograms;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -19,7 +20,7 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-@TeleOp
+@Autonomous
 public class ShippingHubAutomationLevels extends CyberDragonsOpModeTemplate {
 
 
@@ -32,9 +33,15 @@ public class ShippingHubAutomationLevels extends CyberDragonsOpModeTemplate {
 
         //run during op mode
         if (opModeIsActive()) {
+            telemetry.addData("Status", "Running..") ;
+            telemetry.update() ;
 
-            dropFreightInLevel(3);
-
+            // what did the camera see??
+            // the real work
+            //dropFreightInLevel(3);
+            moveForwardVelocity(2000) ;
+            sleep(1000) ;
+            stopDriveMotors();
 
         }
     }
@@ -43,17 +50,74 @@ public class ShippingHubAutomationLevels extends CyberDragonsOpModeTemplate {
 
         if (level == 1) {
 
-            armWithBucket(0, 0.5, -350, 0.5);
+            // move to the correct location
+            if (getFrontDistance() > 12.0) {
+                moveForwardVelocity(2000) ;
+                while (getFrontDistance() >= 12.0) {
+                    ;
+                }
+                stopDriveMotors();
+            } else if (getFrontDistance() < 11.5) { // more important
+                moveBackwardVelocity(2000) ;
+                while (getFrontDistance() <= 11.5) {
+                    ;
+                }
+                stopDriveMotors();
+            }
+            moveArmWithBucket(0, 0.5, -350, 0.5);
 
         } else if (level == 2) {
 
-            armWithBucket(660, 0.5, -1000, 0.5);
+            // move to the correct location
+            if (getFrontDistance() > 10.0) {
+                moveForwardVelocity(2000) ;
+                while (getFrontDistance() >= 10.0) {
+                    ;
+                }
+                stopDriveMotors();
+            } else if (getFrontDistance() < 9.5) {
+                moveBackwardVelocity(2000) ;
+                while (getFrontDistance() <= 9.5) {
+                    ;
+                }
+                stopDriveMotors();
+            }
+            moveArmWithBucket(660, 0.5, -1000, 0.5);
 
         } else if (level == 3) {
 
-            armWithBucket(950, 0.5, -1150, 0.5);
+            // move to the correct location
+            if (getFrontDistance() > 10.0) {
+                moveForwardVelocity(2000) ;
+                while (getFrontDistance() >= 10.0) {
+                    ;
+                }
+                stopDriveMotors();
+            } else if (getFrontDistance() < 9.5) {
+                moveBackwardVelocity(2000) ;
+                while (getFrontDistance() <= 9.5) {
+                    ;
+                }
+                stopDriveMotors();
+            }
+            moveArmWithBucket(950, 0.5, -1150, 0.5);
 
+            moveForwardVelocity(2000) ;
+            while (getFrontDistance() > 3.0) {
+                ;
+            }
+            stopDriveMotors();
+
+        } else {
+            telemetry.addData("Error", "Invalid level") ;
+            telemetry.update() ;
+            return ;
         }
+
+        // eject the freight
+        runBucketPower(1) ;
+        sleep(5000) ;
+        runBucketPower(0) ;
     }
 
 }

@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 @Autonomous
-public class RoadRunnerTest extends LinearOpMode {
+public class RoadRunnerTestHarshmit extends LinearOpMode {
 
     public void runOpMode() throws InterruptedException {
 
