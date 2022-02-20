@@ -119,7 +119,7 @@ public class DropOffMarker extends LinearOpMode {
     frontRight.setPower(1);
     backLeft.setPower(1);
     backRight.setPower(1);
-    while(bucketTurner.isBusy()||armMotor.isBusy||frontLeft.isBusy()||frontRight.isBusy()||backLeft.isBusy()||backRight.isBusy()){
+    while(bucketTurner.isBusy()||armMotor.isBusy()||frontLeft.isBusy()||frontRight.isBusy()||backLeft.isBusy()||backRight.isBusy()){
       ;
     }
     bucketTurner.setTargetPosition(-98);
@@ -128,7 +128,7 @@ public class DropOffMarker extends LinearOpMode {
     armMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
     bucketTurner.setPower(.5);
     armMotor.setPower(.5);
-    while(bucketTurner.isBusy()||armMotor.isBusy){
+    while(bucketTurner.isBusy()||armMotor.isBusy()){
       ;
     }
     /*
