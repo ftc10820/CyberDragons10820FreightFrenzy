@@ -52,6 +52,8 @@ public class BrendanTest extends CyberDragonsOpModeTemplate {
 		  long encoderBucketValue;
       /*Temperary*/moveArmWithBucket(1056, .5, -185, .5);
       moveArmWithBucket(900, .5, 250, .5);
+        moveArmWithBucket(923, .5, -118, .5);
+        moveArmWithBucket(600, .5, -60, .5);
       sleep(20000);
     }
   }
