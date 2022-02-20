@@ -1,4 +1,18 @@
-package org.firstinspires.ftc.teamcode;
+/*
+TeleOp:
+1. Get infront of Team Marker
+2. Press button or somehow changes to Autonomous
+Autonomous:
+1. Backup a enough to put the arm down
+2. Move arm all the way down (Or enough to pick it up)
+3. Move forward same amount as Part 1 or enough to connect to the hook thing
+4. Move arm up to the top of the shipping area
+5. Lower it enough so it touches the pole, and enough so it un-hooks
+6. Move Back
+7. Switch to TeleOp/End function
+*/
+
+package org.firstinspires.ftc.teamcode.TestPrograms;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -13,15 +27,25 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 @Autonomous
 public class DropOffMarker extends LinearOpMode {
   //Motors
-	private DcMotorEx frontLeft;
-	private DcMotorEx frontRight;
-	private DcMotorEx backLeft;
-	private DcMotorEx backRight;
+  private DcMotorEx frontRight;
+  private DcMotorEx frontLeft;
+  private DcMotorEx backLeft;
+  private DcMotorEx backRight;
 
   //Arms/Picking Things Up
-	private DcMotorEx bucket;
-	private DcMotorEx bucketTurner;
-	private DcMotorEx armMotor;
+  private DcMotorEx bucket;
+  private DcMotorEx bucketTurner;
+  private DcMotorEx armMotor;
+
+  //Sensors
+  private DistanceSensor distanceLeftFront;
+  private DistanceSensor distanceLeftBack;
+  private DistanceSensor distanceRightFront;
+  private DistanceSensor distanceRightBack;
+  //private DistanceSensor distanceFront;
+  private DistanceSensor distanceCarousel;
+  private DistanceSensor distanceIntake;
+  private ColorSensor colorFront;
 
   public void runOpMode() {
 
@@ -171,75 +195,74 @@ public class DropOffMarker extends LinearOpMode {
   }
 
   private void moveArmUp(double power, int time) {
-	armMotor.setPower(power);
-	sleep(time);
-	stopAll();
+    armMotor.setPower(power);
+    sleep(time);
+    stopAll();
   }
   private void moveArmDown(double power, int time) {
-	armMotor.setPower(power*-1);
-	sleep(time);
-	stopAll();
+    armMotor.setPower(power*-1);
+    sleep(time);
+    stopAll();
   }
+
   private void moveForward ( double power, int time){
-	frontRight.setPower(power);
-	frontLeft.setPower(power);
-	backRight.setPower(power);
-	backLeft.setPower(power);
-	sleep(time);
-	stopAll();
+    frontRight.setPower(power);
+    frontLeft.setPower(power);
+    backRight.setPower(power);
+    backLeft.setPower(power);
+    sleep(time);
+    stopAll();
   }
+
   private void moveBack ( double power, int time){
-	frontRight.setPower(power * -1);
-	frontLeft.setPower(power * -1);
-	backRight.setPower(power * -1);
-	backLeft.setPower(power * -1);
-	sleep(time);
-	stopAll();
+    frontRight.setPower(power * -1);
+    frontLeft.setPower(power * -1);
+    backRight.setPower(power * -1);
+    backLeft.setPower(power * -1);
+    sleep(time);
+    stopAll();
   }
+
   private void moveLeft ( double power, int time){
-	frontRight.setPower(power);
-	backRight.setPower(power * -1);
-	frontLeft.setPower(power * -1);
-	backLeft.setPower(power);
-	sleep(time);
-	stopAll();
+    frontRight.setPower(power);
+    backRight.setPower(power * -1);
+    frontLeft.setPower(power * -1);
+    backLeft.setPower(power);
+    sleep(time);
+    stopAll();
   }
+
   private void moveRight ( double power, int time){
-	frontRight.setPower(power * -1);
-	backRight.setPower(power);
-	frontLeft.setPower(power);
-	backLeft.setPower(power * -1);
-	sleep(time);
-	stopAll();
+    frontRight.setPower(power * -1);
+    backRight.setPower(power);
+    frontLeft.setPower(power);
+    backLeft.setPower(power * -1);
+    sleep(time);
+    stopAll();
   }
+
   private void turnLeft ( double power, int time){
-	backRight.setPower(power * -1);
-	frontRight.setPower(power * -1);
-	frontLeft.setPower(power);
-	backLeft.setPower(power);
-	sleep(time);
+    backRight.setPower(power * -1);
+    frontRight.setPower(power * -1);
+    frontLeft.setPower(power);
+    backLeft.setPower(power);
+    sleep(time);
   }
+
   private void turnRight ( double power, int time){
-	frontRight.setPower(power);
-	backRight.setPower(power);
-	frontLeft.setPower(power * -1);
-	backLeft.setPower(power * -1);
-	sleep(time);
-	stopAll();
+    frontRight.setPower(power);
+    backRight.setPower(power);
+    frontLeft.setPower(power * -1);
+    backLeft.setPower(power * -1);
+    sleep(time);
+    stopAll();
   }
+
   private void stopAll () {
-	frontRight.setPower(0);
-	frontLeft.setPower(0);
-	backRight.setPower(0);
-	backLeft.setPower(0);
-	armMotor.setPower(0);
+    frontRight.setPower(0);
+    frontLeft.setPower(0);
+    backRight.setPower(0);
+    backLeft.setPower(0);
+    armMotor.setPower(0);
   }
 }
-/*
-Get Encoder Values
-while(true){
-  _ = _.getCurrentPosition();
-  telemetry.addData("_ Value", _);
-  telemetry.update();
-}
-*/

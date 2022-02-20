@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.TestPrograms;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -19,107 +20,104 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-@TeleOp
-public class ShippingHubAutomationLevels extends LinearOpMode {
-
-    private DcMotorEx frontRight;
-    private DcMotorEx frontLeft;
-    private DcMotorEx backLeft;
-    private DcMotorEx backRight;
-
-    private DcMotorEx bucket;
-    private DcMotorEx bucketTurner;
-    private DcMotorEx armMotor;
-
-    private DistanceSensor distanceLeftFront;
-    private DistanceSensor distanceLeftBack;
-    private DistanceSensor distanceRightFront;
-    private DistanceSensor distanceRightBack;
-    //private DistanceSensor distanceFront;
-    private DistanceSensor distanceCarousel;
-    private DistanceSensor distanceIntake;
-    private ColorSensor colorFront;
-
-
-    public enum LiftStates {
-
-        LIFT_START,
-        LIFT_LEVELONE,
-        LIFT_LEVELTWO,
-        LIFT_LEVELTHREE;
-    }
-
-
-    LiftStates liftstates = LiftStates.LIFT_START;
-
-    int LINEAR_SLIDE_HIGH = -150;
-    int LINEAR_SLIDE_LOW = -15;
-
-    int BUCKET_TURNER_HIGH = -30;
-    int BUCKET_TURNER_LOW = -20;
-
-    double BUCKET_IDLE = 0;
-    double BUCKET_RELEASE = 1;
-
-    double RELEASE_TIME = 5000;
-
-    ElapsedTime releaseTimer = new ElapsedTime();
-
-    double speed = 1200; //arbitrary number; static to allow for analyzing how PID performs through multiple speeds in dashboard
-
-    PIDCoefficients pidCoeffs = new PIDCoefficients(0, 0, 0); //PID coefficients that need to be tuned probably through FTC dashboard
-    PIDCoefficients pidGains = new PIDCoefficients(0, 0, 0); //PID gains which we will define later in the process
-
-    ElapsedTime PIDTimer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS); //timer
+@Autonomous
+public class ShippingHubAutomationLevels extends CyberDragonsOpModeTemplate {
 
 
     public void runOpMode() {
 
         //initialization
-        //initializeRobot();
+        initializeRobot();
 
-        waitForStart();
+        waitForStart() ;
 
         //run during op mode
-        while (opModeIsActive()) {
+        if (opModeIsActive()) {
+            telemetry.addData("Status", "Running..") ;
+            telemetry.update() ;
 
-            frontLeft = hardwareMap.get(DcMotorEx.class, "FrontLeft");
-            frontRight = hardwareMap.get(DcMotorEx.class, "FrontRight");
-            backLeft = hardwareMap.get(DcMotorEx.class, "BackLeft");
-            backRight = hardwareMap.get(DcMotorEx.class, "BackRight");
+            // what did the camera see??
+            // the real work
+            //dropFreightInLevel(3);
+            moveForwardVelocity(2000) ;
+            sleep(1000) ;
+            stopDriveMotors();
 
-            bucket = hardwareMap.get(DcMotorEx.class, "Bucket");
-            bucketTurner = hardwareMap.get(DcMotorEx.class, "BucketTurner");
-            armMotor = hardwareMap.get(DcMotorEx.class, "ArmMotor");
-
-            distanceLeftFront = hardwareMap.get(DistanceSensor.class, "distanceLeftFront");
-            distanceLeftBack = hardwareMap.get(DistanceSensor.class, "distanceLeftBack");
-            distanceRightFront = hardwareMap.get(DistanceSensor.class, "distanceRightFront");
-            distanceRightBack = hardwareMap.get(DistanceSensor.class, "distanceRightBack");
-            //distanceFront = hardwareMap.get(DistanceSensor.class, "distanceFront");
-            distanceCarousel = hardwareMap.get(DistanceSensor.class, "distanceCarousel");
-            distanceIntake = hardwareMap.get(DistanceSensor.class, "distanceIntake");
-            colorFront = hardwareMap.get(ColorSensor.class, "colorFront");
-
-
-
-
-
-            /*
-            public void loop() {
-                switch (liftstates) {
-                    case LiftStates.LIFT_START:
-                        // Waiting for some input
-                        if (gamepad1.x) {
-                            // x is pressed, start extending
-                            armMotor.setPosition(ARM_LOW);
-                            liftState = LiftState.LIFT_EXTEND;
-                        }
-                        break;
-
-                }
-            }
-            */
         }
     }
+
+    public void dropFreightInLevel(double level) {
+
+        if (level == 1) {
+
+            // move to the correct location
+            if (getFrontDistance() > 12.0) {
+                moveForwardVelocity(2000) ;
+                while (getFrontDistance() >= 12.0) {
+                    ;
+                }
+                stopDriveMotors();
+            } else if (getFrontDistance() < 11.5) { // more important
+                moveBackwardVelocity(2000) ;
+                while (getFrontDistance() <= 11.5) {
+                    ;
+                }
+                stopDriveMotors();
+            }
+            moveArmWithBucket(0, 0.5, -350, 0.5);
+
+        } else if (level == 2) {
+
+            // move to the correct location
+            if (getFrontDistance() > 10.0) {
+                moveForwardVelocity(2000) ;
+                while (getFrontDistance() >= 10.0) {
+                    ;
+                }
+                stopDriveMotors();
+            } else if (getFrontDistance() < 9.5) {
+                moveBackwardVelocity(2000) ;
+                while (getFrontDistance() <= 9.5) {
+                    ;
+                }
+                stopDriveMotors();
+            }
+            moveArmWithBucket(660, 0.5, -1000, 0.5);
+
+        } else if (level == 3) {
+
+            // move to the correct location
+            if (getFrontDistance() > 10.0) {
+                moveForwardVelocity(2000) ;
+                while (getFrontDistance() >= 10.0) {
+                    ;
+                }
+                stopDriveMotors();
+            } else if (getFrontDistance() < 9.5) {
+                moveBackwardVelocity(2000) ;
+                while (getFrontDistance() <= 9.5) {
+                    ;
+                }
+                stopDriveMotors();
+            }
+            moveArmWithBucket(950, 0.5, -1150, 0.5);
+
+            moveForwardVelocity(2000) ;
+            while (getFrontDistance() > 3.0) {
+                ;
+            }
+            stopDriveMotors();
+
+        } else {
+            telemetry.addData("Error", "Invalid level") ;
+            telemetry.update() ;
+            return ;
+        }
+
+        // eject the freight
+        runBucketPower(1) ;
+        sleep(5000) ;
+        runBucketPower(0) ;
+    }
+
 }

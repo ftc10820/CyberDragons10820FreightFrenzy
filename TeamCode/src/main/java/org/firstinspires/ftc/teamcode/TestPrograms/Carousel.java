@@ -18,6 +18,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SO
 */
 package org.firstinspires.ftc.teamcode.TestPrograms;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -37,38 +38,47 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove a @Disabled the on the next line or two (if present) to add this opmode to the Driver Station OpMode list,
  * or add a @Disabled annotation to prevent this OpMode from being added to the Driver Station
  */
-@TeleOp
-public class Carousel extends LinearOpMode {
-    
-    private DcMotor CarouselTurner;
+@Autonomous
+public class Carousel extends CyberDragonsOpModeTemplate {
+
+    ElapsedTime carouselTimer = new ElapsedTime();
 
     @Override
     public void runOpMode() {
         
-        CarouselTurner = hardwareMap.dcMotor.get("CarouselTurner");
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
+       initializeRobot();
+
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
         // run until the end of the match (driver presses STOP)
-        while (opModeIsActive()) {
+        if (opModeIsActive()) {
             
-            if (gamepad1.right_bumper) {
-                
-                CarouselTurner.setPower(1);
-               
-            }
-
-            if (gamepad1.left_bumper) {
-                
-                CarouselTurner.setPower(-1);
-
-            }
-            
-            telemetry.addData("Status", "Running");
-            telemetry.update();
+            deliverDuck();
 
         }
+    }
+
+    public void deliverDuck() {
+
+        carouselTimer.reset();
+
+        runCarouselVelocity(500);
+        while (carouselTimer.milliseconds() < 1000) {
+
+        }
+
+        runCarouselVelocity(1000);
+        while (carouselTimer.milliseconds() < 2000) {
+
+        }
+
+        runCarouselVelocity(1500);
+        while (carouselTimer.milliseconds() < 3000) {
+
+        }
+
+        runCarouselVelocity(0);
+
     }
 }
