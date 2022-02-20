@@ -6,31 +6,53 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.teamcode.RoadRunner.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.TestPrograms.Carousel;
+import org.firstinspires.ftc.teamcode.TestPrograms.CyberDragonsOpModeTemplate;
+import org.firstinspires.ftc.teamcode.TestPrograms.ShippingHubAutomationLevels;
+
 @Autonomous
 public class RoadRunnerTestHarshmit extends LinearOpMode {
 
     public void runOpMode() throws InterruptedException {
 
+        Carousel carousel = new Carousel();
 
+        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
-        org.firstinspires.ftc.teamcode.RoadRunner.drive.SampleMecanumDrive drive = new org.firstinspires.ftc.teamcode.RoadRunner.drive.SampleMecanumDrive(hardwareMap);
+        ShippingHubAutomationLevels shippingHubAutomationLevels = new ShippingHubAutomationLevels();
 
         Pose2d startPose = new Pose2d(-35, 65, Math.toRadians(-90));
 
         drive.setPoseEstimate(startPose);
 
-        Trajectory mytrajectory= drive. trajectoryBuilder(new Pose2d())
-                .strafeTo(new Vector2d(0,10))
+        Trajectory carouselTurner = drive.trajectoryBuilder(startPose)
+                .strafeTo(new Vector2d(0, 65))
+                .build();
+
+        Trajectory shippingHub = drive.trajectoryBuilder(carouselTurner.end())
+                .splineTo(new Vector2d(-50, 50), Math.toRadians(-90))
+                .build();
+
+        Trajectory parkWarehouse = drive.trajectoryBuilder(shippingHub.end().plus(new Pose2d(0,0,Math.toRadians(-80))))
+                .lineTo(new Vector2d(-130, 50))
                 .build();
 
         waitForStart();
 
         if (opModeIsActive()) {
 
-            drive.followTrajectory(mytrajectory);
-            // test for Harshmit
-            //drive.turn(Math.toRadians(90));
-            //drive.followTrajectory(parkWarehouse);
+            // do carousel
+            drive.followTrajectory(carouselTurner);
+            sleep(5000);
+            //carousel.deliverDuck();
+
+            // place freight
+            drive.followTrajectory(shippingHub);
+            //shippingHubAutomationLevels.dropFreightInLevel(3);
+
+            drive.turn(Math.toRadians(-80));
+            drive.followTrajectory(parkWarehouse);
 
 
         }

@@ -31,11 +31,11 @@ public class RoadRunnerTest extends LinearOpMode {
                 .build();
 
         Trajectory shippingHub = drive.trajectoryBuilder(carouselTurner.end())
-                .splineTo(new Vector2d(-60, 60), Math.toRadians(0))
+                .splineTo(new Vector2d(-50, 50), Math.toRadians(-90))
                 .build();
 
-        Trajectory parkWarehouse = drive.trajectoryBuilder(shippingHub.end())
-                .lineTo(new Vector2d(60, 40))
+        Trajectory parkWarehouse = drive.trajectoryBuilder(shippingHub.end().plus(new Pose2d(0,0,Math.toRadians(-80))))
+                .lineTo(new Vector2d(-130, 50))
                 .build();
 
         waitForStart();
@@ -44,13 +44,14 @@ public class RoadRunnerTest extends LinearOpMode {
 
             // do carousel
             drive.followTrajectory(carouselTurner);
+            sleep(5000);
             //carousel.deliverDuck();
 
             // place freight
             drive.followTrajectory(shippingHub);
             //shippingHubAutomationLevels.dropFreightInLevel(3);
             
-            drive.turn(Math.toRadians(90));
+            drive.turn(Math.toRadians(-80));
             drive.followTrajectory(parkWarehouse);
 
 

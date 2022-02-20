@@ -252,8 +252,8 @@ public class CyberDragonsOpModeTemplate extends LinearOpMode {
     }
 
     public void strafeRightVelocity(double nticks) {
-        frontRight.setVelocity(nticks * -1.0) ;
-        backLeft.setVelocity(nticks * -1.0) ;
+        frontRight.setVelocity(nticks * -1) ;
+        backLeft.setVelocity(nticks * -1) ;
         backRight.setVelocity(nticks) ;
         frontLeft.setVelocity(nticks) ;
     }
