@@ -31,7 +31,7 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @Autonomous
-public class DropOffMarker extends CyberDragonsOpModeTemplate {
+public class BrendanTest extends CyberDragonsOpModeTemplate {
   public void runOpMode() {
 
 	   //initialization
@@ -50,8 +50,9 @@ public class DropOffMarker extends CyberDragonsOpModeTemplate {
 	if(opModeIsActive()) {
 		  long encoderArmValue;
 		  long encoderBucketValue;
-      moveArmWithBucket(1056, .5, -185, .5);
-      moveArmWithBucket(900, .5, -98, .5);
+      /*Temperary*/moveArmWithBucket(1056, .5, -185, .5);
+      moveArmWithBucket(900, .5, 250, .5);
+      sleep(20000);
     }
   }
 }
