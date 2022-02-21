@@ -14,13 +14,14 @@ import org.firstinspires.ftc.teamcode.TestPrograms.ShippingHubAutomationLevels;
 @Autonomous
 public class RoadRunnerTest extends LinearOpMode {
 
+    Carousel carousel = new Carousel();
+
+    SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+
+    ShippingHubAutomationLevels shippingHubAutomationLevels = new ShippingHubAutomationLevels();
+
     public void runOpMode() throws InterruptedException {
 
-        Carousel carousel = new Carousel();
-
-        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
-
-        ShippingHubAutomationLevels shippingHubAutomationLevels = new ShippingHubAutomationLevels();
 
         Pose2d startPose = new Pose2d(-35, 65, Math.toRadians(-90));
 
@@ -56,5 +57,6 @@ public class RoadRunnerTest extends LinearOpMode {
 
         }
     }
+
 
 }
