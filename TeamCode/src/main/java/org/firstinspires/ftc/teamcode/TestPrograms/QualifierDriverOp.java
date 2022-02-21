@@ -35,7 +35,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * or add a @Disabled annotation to prevent this OpMode from being added to the Driver Station
  */
 @TeleOp
-
+@Disabled
 public class QualifierDriverOp extends LinearOpMode {
     
     private DcMotor frontLeft;

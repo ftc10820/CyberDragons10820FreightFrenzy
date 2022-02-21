@@ -54,6 +54,7 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 @TeleOp
+@Disabled
 public class FSMTeleOp extends OpMode {
     
     // Declare OpMode members.
