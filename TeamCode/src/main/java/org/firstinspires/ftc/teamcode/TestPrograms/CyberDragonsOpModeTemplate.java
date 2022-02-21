@@ -88,7 +88,7 @@ public class CyberDragonsOpModeTemplate extends LinearOpMode {
 		backRight = hardwareMap.get(DcMotorEx.class, "BackRight");
 
 		// initializing other motors
-		bucket = hardwareMap.get(DcMotor.class, "Bucket");
+		bucket = hardwareMap.get(DcMotorEx.class, "Bucket");
 		bucketTurner = hardwareMap.get(DcMotorEx.class, "BucketTurner");
 		armMotor = hardwareMap.get(DcMotorEx.class, "ArmMotor");
 		carouselTurner = hardwareMap.get(DcMotorEx.class, "CarouselTurner");
@@ -251,21 +251,27 @@ public class CyberDragonsOpModeTemplate extends LinearOpMode {
 	frontLeft.setVelocity(nticks * -1.0) ;
   }
 
-<<<<<<< HEAD
-    public void strafeRightVelocity(double nticks) {
-        frontRight.setVelocity(nticks * -1) ;
-        backLeft.setVelocity(nticks * -1) ;
+  	public void strafeRightVelocityforauto(double nticks) {
+        frontRight.setVelocity(nticks * -0.9) ;
+        backLeft.setVelocity(nticks * -0.9) ;
         backRight.setVelocity(nticks) ;
         frontLeft.setVelocity(nticks) ;
+
     }
-=======
-  public void strafeRightVelocity(double nticks) {
-	frontRight.setVelocity(nticks * -1.0) ;
-	backLeft.setVelocity(nticks * -1.0) ;
+
+	public void strafeRightVelocity(double nticks) {
+		frontRight.setVelocity(nticks * -1);
+		backLeft.setVelocity(nticks * -1);
+		backRight.setVelocity(nticks);
+		frontLeft.setVelocity(nticks);
+
+	}
+  public void strafeleftVelocity(double nticks) {
+	frontRight.setVelocity(nticks * -1) ;
+	backLeft.setVelocity(nticks * -1) ;
 	backRight.setVelocity(nticks) ;
 	frontLeft.setVelocity(nticks) ;
   }
->>>>>>> 14fe7ea029ee3902369456581f84ae2f5e2e825a
 
   public void runIntakelServo(double position) {
   	// NOTE this takes a value only from 0 to 1

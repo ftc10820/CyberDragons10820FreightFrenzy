@@ -5,14 +5,23 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.teamcode.RoadRunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.TestPrograms.Carousel;
 import org.firstinspires.ftc.teamcode.TestPrograms.CyberDragonsOpModeTemplate;
 import org.firstinspires.ftc.teamcode.TestPrograms.ShippingHubAutomationLevels;
 
+
 @Autonomous
 public class RoadRunnerTest extends LinearOpMode {
+    private DcMotorEx carouselTurner;
+    private void initializeRobot() {
+        carouselTurner = hardwareMap.get(DcMotorEx.class, "CarouselTurner");
+        carouselTurner.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+    }
 
     public void runOpMode() throws InterruptedException {
 
@@ -44,8 +53,7 @@ public class RoadRunnerTest extends LinearOpMode {
 
             // do carousel
             drive.followTrajectory(carouselTurner);
-            sleep(5000);
-            //carousel.deliverDuck();
+            carousel.deliverDuck();
 
             // place freight
             drive.followTrajectory(shippingHub);
