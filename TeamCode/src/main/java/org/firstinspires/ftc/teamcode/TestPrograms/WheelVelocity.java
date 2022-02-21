@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import org.firstinspires.ftc.robotcore.external.Telemetry ;
 
 @Autonomous
-
+@Disabled
 public class WheelVelocity extends LinearOpMode{
 
     private DcMotorEx frontLeft;
