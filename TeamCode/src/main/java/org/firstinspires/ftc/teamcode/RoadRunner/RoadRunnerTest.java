@@ -17,13 +17,13 @@ import org.firstinspires.ftc.teamcode.TestPrograms.ShippingHubAutomationLevels;
 @Autonomous
 public class RoadRunnerTest extends LinearOpMode {
     private DcMotorEx carouselTurner;
-    private void initializeRobot() {
+    private void initializeCarousel() {
         carouselTurner = hardwareMap.get(DcMotorEx.class, "CarouselTurner");
         carouselTurner.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
     }
 
-    Carousel carousel = new Carousel();
+    //Carousel carousel = new Carousel();
 
     SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
@@ -48,13 +48,30 @@ public class RoadRunnerTest extends LinearOpMode {
                 .lineTo(new Vector2d(-130, 50))
                 .build();
 
+        initalizeCarousel();
+
         waitForStart();
 
         if (opModeIsActive()) {
 
             // do carousel
             drive.followTrajectory(carouselTurner);
-            carousel.deliverDuck();
+            sleep(10000);
+            //carousel.deliverDuck();
+            carouselTurner.setVelocity(200);
+            sleep(500);
+
+            carouselTurner.setVelocity(500);
+            sleep(500);
+
+            carouselTurner.setVelocity(1000);
+            sleep(2000);
+
+            carouselTurner.setVelocity(2000);
+            sleep(2000);
+
+            carouselTurner.setvelocity(0);
+            sleep(20000);
 
             // place freight
             drive.followTrajectory(shippingHub);
