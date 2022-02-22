@@ -31,7 +31,7 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @Autonomous
-public class BrendanTest extends CyberDragonsOpModeTemplate {
+public class DropOffMarker extends CyberDragonsOpModeTemplate {
   public void runOpMode() {
 
 	   //initialization
