@@ -37,15 +37,15 @@ public class BlueCarouselRoadRunner extends LinearOpMode {
         drive.setPoseEstimate(startPose);
 
         Trajectory carouselTurner = drive.trajectoryBuilder(startPose)
-                .strafeTo(new Vector2d(-65, 65))
+                .strafeTo(new Vector2d(-70, 75))
                 .build();
 
         Trajectory shippingHub = drive.trajectoryBuilder(carouselTurner.end())
-                .splineTo(new Vector2d(-15, 50), Math.toRadians(-90))
+                .splineTo(new Vector2d(-15, 55), Math.toRadians(-90))
                 .build();
 
         Trajectory parkWarehouse = drive.trajectoryBuilder(shippingHub.end().plus(new Pose2d(0,0,Math.toRadians(90))))
-                .lineTo(new Vector2d(60, 50))
+                .lineTo(new Vector2d(60, 55))
                 .build();
 
         initializeMotors();
@@ -61,24 +61,7 @@ public class BlueCarouselRoadRunner extends LinearOpMode {
             deliverDuck();
 
             sleep(100);
-            /*
-            carouselTurner.setVelocity(200);
-            sleep(500);
 
-            carouselTurner.setVelocity(500);
-            sleep(500);
-
-            carouselTurner.setVelocity(1000);
-            sleep(2000);
-
-            carouselTurner.setVelocity(2000);
-            sleep(2000);
-
-            carouselTurner.setvelocity(0);
-            sleep(20000);
-            */
-
-            // place freight
             drive.followTrajectory(shippingHub);
             sleep(100);
 
@@ -90,7 +73,6 @@ public class BlueCarouselRoadRunner extends LinearOpMode {
             sleep(100);
 
             drive.followTrajectory(parkWarehouse);
-
 
         }
     }

@@ -60,7 +60,7 @@ public class StatesTeleOp extends OpMode  {
 
                 break;
 
-            case CAROUSEL:
+            case PICKUP_MARKER:
 
                 //carousel automation
 
