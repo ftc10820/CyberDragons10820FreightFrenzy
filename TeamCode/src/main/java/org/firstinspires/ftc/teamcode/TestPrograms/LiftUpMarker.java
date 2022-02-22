@@ -31,16 +31,18 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @Autonomous
+<<<<<<< Updated upstream
 public class LiftUpMarker extends CyberDragonsOpModeTemplate {
+=======
+public class LiftUpMaker extends CyberDragonsOpModeTemplate {
+>>>>>>> Stashed changes
   public void runOpMode() {
 		//initialization
 		initializeRobot();
 
 		waitForStart();
 		if(opModeIsActive()) {
-			long encoderArmValue;
-			long encoderBucketValue;
-			moveArmWithBucket(-185, .5, 1056, .5);
-  	}
+			moveArmWithBucket(1056, .5, 0, .5);  
+		}
 	}
 }

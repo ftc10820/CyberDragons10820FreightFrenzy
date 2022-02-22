@@ -37,7 +37,7 @@ public class BrendanTest extends CyberDragonsOpModeTemplate {
 	   //initialization
 	    initializeRobot();
 
-	     waitForStart();
+	    waitForStart();
 	      //run during op mode
 /*
   1st:
@@ -48,13 +48,12 @@ public class BrendanTest extends CyberDragonsOpModeTemplate {
     Bucket: -89
 */
 	if(opModeIsActive()) {
-		  long encoderArmValue;
-		  long encoderBucketValue;
+    sleep(2500);
       /*Temperary*/moveArmWithBucket(1056, .5, -185, .5);
       moveArmWithBucket(900, .5, 250, .5);
-        moveArmWithBucket(923, .5, -118, .5);
-        moveArmWithBucket(600, .5, -60, .5);
+      moveArmWithBucket(845, .5, 113, .5);
+      moveArmWithBucket(447, .5, 439, .5);
       sleep(20000);
-    }
+    }//845, 113; 447, 439
   }
 }
