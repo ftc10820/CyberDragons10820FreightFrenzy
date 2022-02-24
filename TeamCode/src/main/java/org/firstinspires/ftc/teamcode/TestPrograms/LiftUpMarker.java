@@ -31,12 +31,9 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @Autonomous
-<<<<<<< Updated upstream
 public class LiftUpMarker extends CyberDragonsOpModeTemplate {
-=======
-public class LiftUpMaker extends CyberDragonsOpModeTemplate {
->>>>>>> Stashed changes
-  public void runOpMode() {
+
+	public void runOpMode() {
 		//initialization
 		initializeRobot();
 

@@ -1,106 +1,123 @@
 package org.firstinspires.ftc.teamcode.TestPrograms;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.checkerframework.checker.units.qual.C;
-import org.checkerframework.checker.units.qual.Current;
+@TeleOp
+public class StatesTeleOp extends LinearOpMode {
 
-public class StatesTeleOp extends OpMode  {
+    //Motors
+    private DcMotorEx frontRight;
+    private DcMotorEx frontLeft;
+    private DcMotorEx backLeft;
+    private DcMotorEx backRight;
 
-    CyberDragonsOpModeTemplate cyberDragonsOpModeTemplate = new CyberDragonsOpModeTemplate();
-    ShippingHubAutomationLevels shippingHubAutomationLevels = new ShippingHubAutomationLevels();
+    private DcMotorEx carouselTurner;
+    private DcMotorEx armMotor;
+    private DcMotorEx bucketTurner;
+    private DcMotor bucket;
 
-    CyberDragons drive = new CyberDragons(hardwareMap);
+    ElapsedTime carouselTimer = new ElapsedTime();
 
-    /*
-    integrations necessary
-    - automation for different levels
-    - rift + lacuna automations
-    - carousel automation
-    - capping
-     */
+    ElapsedTime releaseTimer = new ElapsedTime();
 
-    private enum CurrentMode {
-
-        DRIVER_CONTROL,
-        LEVEL_3,
-        LACUNA,
-        PICKUP_MARKER,
-        CAPPING
-
-    }
-
-    CurrentMode currentMode = CurrentMode.DRIVER_CONTROL;
+    static double MAX_TICKS_PER_SECOND = 2000.0;
 
     @Override
-    public void init() {
+    public void runOpMode() throws InterruptedException {
 
-        cyberDragonsOpModeTemplate.initializeRobot();
+        initializeRobot();
 
-    }
+        waitForStart();
 
-    @Override
-    public void loop() {
+        while (opModeIsActive()) {
 
-        telemetry.addData("Current Stage", currentMode);
-        telemetry.update();
+            double arm = -gamepad2.right_stick_y;
+            armMotor.setVelocity(arm * FSM_StatesTeleOp.MAX_TICKS_PER_SECOND);
 
-        switch (currentMode) {
-            case LEVEL_3:
+            double bucketVal = -gamepad2.left_stick_y;
+            bucketTurner.setVelocity(bucketVal * FSM_StatesTeleOp.MAX_TICKS_PER_SECOND);
 
-                //rift automation
-                //shippingHubAutomationLevels.dropFreightInLevel(3);
+            if (gamepad2.dpad_up) {
 
-                break;
+                bucket.setPower(1);
 
-            case LACUNA:
+            } else if (gamepad2.dpad_down) {
 
-                //lacuna automation
+                bucket.setPower(-0.75);
 
-                break;
+            } else if (gamepad2.dpad_right) {
 
-            case PICKUP_MARKER:
+                bucket.setPower(0);
 
-                //carousel automation
+            }
+
+            double carouselTurnerForward = gamepad2.right_trigger;
+
+            carouselTurner.setVelocity(carouselTurnerForward * FSM_StatesTeleOp.MAX_TICKS_PER_SECOND);
+
+            double carouselTurnerBackward = -1 * gamepad2.left_trigger;
+
+            carouselTurner.setVelocity(carouselTurnerBackward * FSM_StatesTeleOp.MAX_TICKS_PER_SECOND);
+
+            if (gamepad2.right_bumper || gamepad2.left_bumper) {
+
+                bucketTurner.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+            }
 
 
-                break;
+            if (gamepad1.y) {
 
-            case CAPPING:
+                while (gamepad1.right_bumper || gamepad1.left_bumper != true) {
 
-                // capping automation
+                    dropFreightInLevel(3);
+                    break;
 
-                break;
+                }
 
-            case DRIVER_CONTROL:
+                armMotor.setPower(0);
+                bucketTurner.setPower(0);
+                bucket.setPower(0);
 
-                //normal driver
-                double y = -gamepad1.left_stick_y; // Remember, this is reversed!
-                double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
-                double rx = -gamepad1.right_stick_x ;
+                armMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+                bucketTurner.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 
-                // Denominator is the largest motor power (absolute value) or 1
-                // This ensures all the powers maintain the same ratio, but only when
-                // at least one is out of the range [-1, 1]
-                double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-                double frontLeftPower = (y + x + rx) / denominator;
-                double backLeftPower = (y - x + rx) / denominator;
-                double frontRightPower = (y - x - rx) / denominator;
-                double backRightPower = (y + x - rx) / denominator;
+            }
 
-                break;
-            default:
-                currentMode = CurrentMode.DRIVER_CONTROL;
+            if (gamepad1.a) {
+
+                //lacuna
+            }
+
+            if (gamepad1.dpad_up) {
+
+                //pickup marker
+            }
+
+
+            //normal driver
+            double y = -gamepad1.left_stick_y; // Remember, this is reversed!
+            double x = -gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
+            double rx = -gamepad1.right_stick_x ;
+
+            // Denominator is the largest motor power (absolute value) or 1
+            // This ensures all the powers maintain the same ratio, but only when
+            // at least one is out of the range [-1, 1]
+            double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
+            double frontLeftPower = (y + x + rx) / denominator;
+            double backLeftPower = (y - x + rx) / denominator;
+            double frontRightPower = (y - x - rx) / denominator;
+            double backRightPower = (y + x - rx) / denominator;
+
+            setThrottle(frontLeftPower, frontRightPower, backLeftPower, backRightPower);
+
         }
-
-        // temporary fail-safe is dpad up
-        if ((gamepad1.right_bumper || gamepad1.left_bumper) && currentMode != CurrentMode.DRIVER_CONTROL) {
-
-            currentMode = CurrentMode.DRIVER_CONTROL;
-
-        }
-
     }
 
     public void setThrottle(double frontLeftVelocity, double frontRightVelocity, double backLeftVelocity, double backRightVelocity) {
@@ -146,10 +163,160 @@ public class StatesTeleOp extends OpMode  {
         }
 
         // Set velocities
-        drive.frontLeft.setVelocity(frontLeftVelocity * PID_MecanumDrive.MAX_TICKS_PER_SECOND);
-        drive.frontRight.setVelocity(frontRightVelocity * PID_MecanumDrive.MAX_TICKS_PER_SECOND);
-        drive.backLeft.setVelocity(backLeftVelocity * PID_MecanumDrive.MAX_TICKS_PER_SECOND);
-        drive.backRight.setVelocity(backRightVelocity * PID_MecanumDrive.MAX_TICKS_PER_SECOND);
+        frontLeft.setVelocity(frontLeftVelocity * FSM_StatesTeleOp.MAX_TICKS_PER_SECOND);
+        frontRight.setVelocity(frontRightVelocity * FSM_StatesTeleOp.MAX_TICKS_PER_SECOND);
+        backLeft.setVelocity(backLeftVelocity * FSM_StatesTeleOp.MAX_TICKS_PER_SECOND);
+        backRight.setVelocity(backRightVelocity * FSM_StatesTeleOp.MAX_TICKS_PER_SECOND);
     }
 
+    private void initializeRobot() {
+
+        // initializing drive wheels
+        frontLeft = hardwareMap.get(DcMotorEx.class, "FrontLeft");
+        frontRight = hardwareMap.get(DcMotorEx.class, "FrontRight");
+        backLeft = hardwareMap.get(DcMotorEx.class, "BackLeft");
+        backRight = hardwareMap.get(DcMotorEx.class, "BackRight");
+
+        // sets the motors to use encoders
+        frontLeft.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        frontRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        backLeft.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        backRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+
+
+        //reset encoders
+        frontLeft.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        frontRight.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        backLeft.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        backRight.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+
+        //set direction of drive motors
+        frontLeft.setDirection(DcMotor.Direction.FORWARD);
+        frontRight.setDirection(DcMotor.Direction.REVERSE);
+        backLeft.setDirection(DcMotor.Direction.FORWARD);
+        backRight.setDirection(DcMotor.Direction.REVERSE);
+
+        // sets the motors to brake when there is no power applied (motor tries to actively maintain position)
+        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        carouselTurner = hardwareMap.get(DcMotorEx.class, "CarouselTurner");
+        armMotor = hardwareMap.get(DcMotorEx.class, "ArmMotor");
+        bucketTurner = hardwareMap.get(DcMotorEx.class, "BucketTurner");
+        bucket = hardwareMap.get(DcMotor.class, "Bucket");
+
+        carouselTurner.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        bucketTurner.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        carouselTurner.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        bucketTurner.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        carouselTurner.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        bucketTurner.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        bucketTurner.setDirection(DcMotorSimple.Direction.REVERSE);
+
+
+    }
+
+    public void dropFreightInLevel(int level) {
+
+        armMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        bucketTurner.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+
+        if (level == 1) {
+
+            moveArmToEncoderVal(150, 0.5);
+            moveBucketToEncoderVal(-650, 0.5) ;
+
+        } else if (level == 2) {
+
+            moveArmToEncoderVal(650, 0.5) ;
+            moveBucketToEncoderVal(-1050, 0.5) ;
+
+        } else if (level == 3) {
+            moveArmToEncoderVal(950, 0.5) ;
+            moveBucketToEncoderVal(-1150, 0.5) ;
+
+
+
+        } else {
+            telemetry.addData("Error", "Invalid level") ;
+            telemetry.update() ;
+            return ;
+        }
+
+        releaseTimer.reset();
+
+        bucket.setPower(-1);
+        while (releaseTimer.milliseconds() < 1000) {
+
+        }
+
+        bucket.setPower(0);
+
+
+
+    }
+
+    public void moveArmToEncoderVal(int encValArm, double pval) {
+
+        armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        armMotor.setTargetPosition(encValArm);
+
+        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        armMotor.setPower(pval);
+
+        while (armMotor.isBusy()) {
+
+
+        }
+
+    }
+
+    public void moveBucketToEncoderVal(int encValBuc, double pval) {
+
+        bucketTurner.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        bucketTurner.setTargetPosition(encValBuc);
+
+        bucketTurner.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        bucketTurner.setPower(pval);
+
+        while (bucketTurner.isBusy()) {
+
+
+        }
+
+    }
+
+    public void moveArmWithBucket(int encValArm, double pvalArm, int encValBuc, double pvalBuc) {
+
+
+        armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        bucketTurner.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        armMotor.setTargetPosition(encValArm);
+        bucketTurner.setTargetPosition(encValBuc);
+
+        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        bucketTurner.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        armMotor.setPower(pvalArm);
+        bucketTurner.setPower(pvalBuc);
+
+        while (armMotor.isBusy() || bucketTurner.isBusy()) {
+
+
+        }
+
+    }
 }

@@ -10,6 +10,10 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.RoadRunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.TestPrograms.Carousel;
 import org.firstinspires.ftc.teamcode.TestPrograms.CyberDragonsOpModeTemplate;
@@ -28,6 +32,18 @@ public class BlueCarouselRoadRunner extends LinearOpMode {
 
     ElapsedTime releaseTimer = new ElapsedTime();
 
+    // object detection variables
+    private static final String TFOD_MODEL_ASSET = "10820model.tflite";
+    private static final String[] LABELS = new String[] { "10820marker" };
+    private static final String VUFORIA_KEY = "Af2A/t3/////AAABmSsJTGsI6Ebgr6cIo4YGqmCBxd+lRenqxeIeJ3TQXcQgRlvrzKhb44K7xnbfJnHjD6eLQaFnpZZEa1Vz1PRYMNj3xCEhYZU7hAYQwyu1KBga3Lo0vEPXPSZW1o8DrM2C6IhYYGifzayZFNwZw5HtnPbyZvJfG4w6TX4EO8F0VSnZt87QtBW27nh5vSgRLN1XdzrVzm8h1ScZrPsIpSKJWVmNCWqOOeibloKfoZbhZ5A8vFz0I3nvMdi/v54DwcmS7GS/hryCgjhy4n9EhD1SnJ5325jnoyi4Fa5a/pibxPmAi8kU7ioHucmQRgv3yQHh17emqait9QNS4jTu6xyM6eeoVADsXTG4f7KK6nlZZjat";
+
+    private VuforiaLocalizer vuforia;
+    private TFObjectDetector tfod;
+
+    int objectsRecognized = 0;
+    int level = 0;
+    int xPosMarker = 150;
+
     public void runOpMode() throws InterruptedException {
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
@@ -41,11 +57,11 @@ public class BlueCarouselRoadRunner extends LinearOpMode {
                 .build();
 
         Trajectory shippingHub = drive.trajectoryBuilder(carouselTurner.end())
-                .splineTo(new Vector2d(-15, 55), Math.toRadians(-90))
+                .splineTo(new Vector2d(-20, 55), Math.toRadians(-90))
                 .build();
 
         Trajectory parkWarehouse = drive.trajectoryBuilder(shippingHub.end().plus(new Pose2d(0,0,Math.toRadians(90))))
-                .lineTo(new Vector2d(60, 55))
+                .lineTo(new Vector2d(50, 55))
                 .build();
 
         initializeMotors();
@@ -98,6 +114,15 @@ public class BlueCarouselRoadRunner extends LinearOpMode {
 
         bucketTurner.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        initVuforia();
+        initTfod();
+
+        if (tfod != null) {
+
+            tfod.activate();
+            tfod.setZoom(1.0, 2.0);
+
+        }
 
     }
 
@@ -216,6 +241,38 @@ public class BlueCarouselRoadRunner extends LinearOpMode {
 
         }
 
+    }
+
+    /**
+     * Initialize the Vuforia localization engine.
+     */
+    private void initVuforia() {
+        /*
+         * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
+         */
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+
+        parameters.vuforiaLicenseKey = VUFORIA_KEY;
+        parameters.cameraName = hardwareMap.get(WebcamName.class, "Camera");
+
+        //  Instantiate the Vuforia engine
+        vuforia = ClassFactory.getInstance().createVuforia(parameters);
+
+        // Loading trackables is not necessary for the TensorFlow Object Detection engine.
+    }
+
+    /**
+     * Initialize the TensorFlow Object Detection engine.
+     */
+    private void initTfod() {
+        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
+                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+        tfodParameters.minResultConfidence = 0.8f;
+        tfodParameters.isModelTensorFlow2 = true;
+        tfodParameters.inputSize = 320;
+        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
     }
 
 }
