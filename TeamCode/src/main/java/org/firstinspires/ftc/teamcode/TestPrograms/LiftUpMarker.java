@@ -32,8 +32,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 @Autonomous
 public class LiftUpMarker extends CyberDragonsOpModeTemplate {
-
-	public void runOpMode() {
+  public void runOpMode() {
 		//initialization
 		initializeRobot();
 

@@ -29,7 +29,7 @@ public class PickUpMarker extends CyberDragonsOpModeTemplate {
     if(opModeIsActive()) {
       // long encoderArmValue;
       // long encoderBucketValue;
-      // moveArmWithBucket(15, 1, 230, 1);
+      moveArmWithBucket(15, 1, 230, 1);
       // encoderArmValue = armMotor.getCurrentPosition();
       // encoderBucketValue = bucketTurner.getCurrentPosition();
     }

@@ -49,7 +49,7 @@ public class DropOffMarker extends CyberDragonsOpModeTemplate {
 */
 	if(opModeIsActive()) {
     sleep(2500);
-      /*Temperary*/moveArmWithBucket(1056, .5, -185, .5);
+      /*Temperary*/moveArmWithBucket(1056, .5, 250, .5);
       moveArmWithBucket(900, .5, 250, .5);
       moveArmWithBucket(845, .5, 113, .5);
       moveArmWithBucket(447, .5, 439, .5);
