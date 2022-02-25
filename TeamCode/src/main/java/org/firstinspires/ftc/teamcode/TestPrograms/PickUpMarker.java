@@ -17,21 +17,18 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @Autonomous
-public class PickUpMarker extends CyberDragonsOpModeTemplate {
+public class BrendanTest extends CyberDragonsOpModeTemplate {
   public void runOpMode() {
 	long encoderArmValue;
-    long encoderBucketValue;
-    //initialization
+	long encoderBucketValue;
+	//initialization
 	 initializeRobot();
 
 	 waitForStart();
 	 //run during op mode
-    if(opModeIsActive()) {
-      // long encoderArmValue;
-      // long encoderBucketValue;
-      moveArmWithBucket(15, 1, 230, 1);
-      // encoderArmValue = armMotor.getCurrentPosition();
-      // encoderBucketValue = bucketTurner.getCurrentPosition();
-    }
+	if(opModeIsActive()) {
+	  moveArmToEncoderVal(300, 1);
+	  moveBucketToEncoderVal(-650, 1);
+	}
   }
 }
