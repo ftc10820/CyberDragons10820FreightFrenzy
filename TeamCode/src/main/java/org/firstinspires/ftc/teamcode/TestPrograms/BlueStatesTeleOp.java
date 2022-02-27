@@ -1,9 +1,7 @@
 package org.firstinspires.ftc.teamcode.TestPrograms;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -19,9 +17,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-@TeleOp
-@Disabled
-public class FSM_StatesTeleOp extends LinearOpMode {
+@TeleOp(name = "Blue: States TeleOp", group = "Blue")
+public class BlueStatesTeleOp extends LinearOpMode {
 
     //Motors
     private DcMotorEx frontRight;
@@ -37,14 +34,16 @@ public class FSM_StatesTeleOp extends LinearOpMode {
     //Servos
     private Servo intakeServo;
 
-    //Sensors
-    private DistanceSensor distanceLeftFront;
-    private DistanceSensor distanceLeftBack;
-    private DistanceSensor distanceRightFront;
-    private DistanceSensor distanceRightBack;
-    private DistanceSensor distanceFront;
-    private DistanceSensor distanceIntake;
-    private ColorSensor colorFront;
+	/*
+	//Sensors
+	private DistanceSensor distanceLeftFront;
+	private DistanceSensor distanceLeftBack;
+	private DistanceSensor distanceRightFront;
+	private DistanceSensor distanceRightBack;
+	private DistanceSensor distanceFront;
+	private DistanceSensor distanceIntake;
+	private ColorSensor colorFront;
+	*/
 
     // Variables for the IMU
     BNO055IMU imu;
@@ -57,20 +56,11 @@ public class FSM_StatesTeleOp extends LinearOpMode {
 
     static double MAX_TICKS_PER_SECOND = 2000.0;
 
-
-    private enum CurrentMode {
-
-        DRIVER_CONTROL,
-        LEVEL_3,
-        LACUNA,
-        PICKUP_MARKER
-
-    }
-
-    CurrentMode currentMode = CurrentMode.DRIVER_CONTROL;
-
     @Override
     public void runOpMode() throws InterruptedException {
+
+        telemetry.addLine("reached");
+        telemetry.update();
 
         initializeRobot();
 
@@ -78,179 +68,180 @@ public class FSM_StatesTeleOp extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            telemetry.addData("Current Stage", currentMode);
-            telemetry.update();
+            double arm = -gamepad2.right_stick_y;
+            armMotor.setVelocity(arm * RedStatesTeleOp.MAX_TICKS_PER_SECOND);
 
+            double bucketVal = -gamepad2.left_stick_y;
+            bucketTurner.setVelocity(bucketVal * RedStatesTeleOp.MAX_TICKS_PER_SECOND);
 
+            if (gamepad2.dpad_up) {
 
-            //fail-safe is bumpers
-            if ((gamepad1.right_bumper || gamepad1.left_bumper) && currentMode != CurrentMode.DRIVER_CONTROL) {
+                bucket.setPower(1);
 
-                currentMode = CurrentMode.DRIVER_CONTROL;
+            } else if (gamepad2.dpad_down) {
+
+                bucket.setPower(-0.75);
+
+            } else if (gamepad2.dpad_right) {
+
+                bucket.setPower(0);
 
             }
 
-            switch (currentMode) {
-                case LEVEL_3:
+			/*
+			if (distanceIntake.getDistance(DistanceUnit.INCH) < 3) {
+
+				telemetry.addLine("FREIGHT IN POSSESSION");
+				telemetry.update();
+
+			} else if (distanceIntake.getDistance(DistanceUnit.INCH) > 3) {
+
+				telemetry.addLine("");
+				telemetry.update();
+
+			}
+			*/
+
+
+            if (gamepad2.x) {
+
+                carouselTimer.reset();
+
+                carouselTurner.setVelocity(1000);
+                while (carouselTimer.milliseconds() < 500) {
+
+                }
+
+                carouselTurner.setVelocity(1250);
+                while (carouselTimer.milliseconds() < 1000) {
+
+                }
+
+                carouselTurner.setVelocity(1750);
+                while (carouselTimer.milliseconds() < 2250) {
+
+                }
+
+                carouselTurner.setVelocity(0);
+
+            } else if (gamepad2.y) {
+
+                carouselTimer.reset();
+
+                carouselTurner.setVelocity(-1000);
+                while (carouselTimer.milliseconds() < 500) {
+
+                }
+
+                carouselTurner.setVelocity(-1250);
+                while (carouselTimer.milliseconds() < 1000) {
+
+                }
+
+                carouselTurner.setVelocity(-1750);
+                while (carouselTimer.milliseconds() < 2250) {
+
+                }
+
+                carouselTurner.setVelocity(0);
+
+            } else {
+
+                carouselTurner.setVelocity(0);
+
+            }
+
+            if (gamepad2.right_bumper || gamepad2.left_bumper) {
+
+                bucketTurner.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+            }
+
+
+            if (gamepad1.y) {
+
+                while (gamepad1.right_bumper || gamepad1.left_bumper != true) {
 
                     dropFreightInLevel(3);
-
-                    armMotor.setPower(0);
-                    bucketTurner.setPower(0);
-                    bucket.setPower(0);
-
-                    armMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-                    bucketTurner.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-
-                    currentMode = CurrentMode.DRIVER_CONTROL;
-
                     break;
 
-                case LACUNA:
+                }
 
-                    moveArmToEncoderVal(500, 0.75);
-                    moveBucketToEncoderVal(-1200, 0.75);
-                    rotateVelocity(120,1500);
-                    intakeServo.setPosition(1.0);
-                    runBucketPower(-0.5);
+                armMotor.setPower(0);
+                bucketTurner.setPower(0);
+                bucket.setPower(0);
 
-                    releaseTimer.reset();
-                    while (releaseTimer.milliseconds() < 1000) {
+                armMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+                bucketTurner.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 
-                    }
+            }
 
-                    runBucketPower(0.0);
-                    intakeServo.setPosition(0.0);
+            if (gamepad1.x) {
 
-                    rotateVelocity(-120,1500);
+                moveArmToEncoderVal(500, 0.75);
+                moveBucketToEncoderVal(-1200, 0.75);
+                rotateVelocity(120,1500);
+                intakeServo.setPosition(1.0);
+                runBucketPower(-0.5);
 
-                    armMotor.setPower(0);
-                    bucketTurner.setPower(0);
-                    bucket.setPower(0);
+                releaseTimer.reset();
+                while (releaseTimer.milliseconds() < 1000) {
 
-                    armMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-                    bucketTurner.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+                }
 
-                    frontLeft.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-                    frontRight.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-                    backLeft.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-                    backRight.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+                runBucketPower(0.0);
+                intakeServo.setPosition(0.0);
 
-                    currentMode = CurrentMode.DRIVER_CONTROL;
+                rotateVelocity(-120,1500);
 
-                    break;
+                armMotor.setPower(0);
+                bucketTurner.setPower(0);
+                bucket.setPower(0);
 
-                case PICKUP_MARKER:
+                armMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+                bucketTurner.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 
-                    moveArmToEncoderVal(300, 1);
-                    moveBucketToEncoderVal(-650, 1);
-
-                    armMotor.setPower(0);
-                    bucketTurner.setPower(0);
-
-                    armMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-                    bucketTurner.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-
-                    currentMode = CurrentMode.DRIVER_CONTROL;
-
-                    break;
-
-                case DRIVER_CONTROL:
-
-                    double arm = -gamepad2.right_stick_y;
-                    armMotor.setVelocity(arm * FSM_StatesTeleOp.MAX_TICKS_PER_SECOND);
-
-                    double bucketVal = -gamepad2.left_stick_y;
-                    bucketTurner.setVelocity(bucketVal * FSM_StatesTeleOp.MAX_TICKS_PER_SECOND);
-
-                    if (gamepad2.dpad_up) {
-
-                        bucket.setPower(1);
-
-                    } else if (gamepad2.dpad_down) {
-
-                        bucket.setPower(-0.75);
-
-                    } else if (gamepad2.dpad_right) {
-
-                        bucket.setPower(0);
-
-                    }
-
-                    if (distanceIntake.getDistance(DistanceUnit.INCH) < 3) {
-
-                        telemetry.addLine("FREIGHT IN POSSESSION");
-                        telemetry.update();
-
-                    } else if (distanceIntake.getDistance(DistanceUnit.INCH) > 3) {
-
-                        telemetry.addLine("");
-                        telemetry.update();
-
-                    }
-
-                    double carouselTurnerForward = gamepad2.right_trigger;
-
-                    carouselTurner.setVelocity(carouselTurnerForward * FSM_StatesTeleOp.MAX_TICKS_PER_SECOND);
-
-                    double carouselTurnerBackward = -1 * gamepad2.left_trigger;
-
-                    carouselTurner.setVelocity(carouselTurnerBackward * FSM_StatesTeleOp.MAX_TICKS_PER_SECOND);
-
-                    if (gamepad2.right_bumper || gamepad2.left_bumper) {
-
-                        bucketTurner.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-                    }
+                frontLeft.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+                frontRight.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+                backLeft.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+                backRight.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 
 
-                    if (gamepad1.y) {
+            }
 
-                        currentMode = CurrentMode.LEVEL_3;
+            if (gamepad1.dpad_up) {
 
-                    }
+                //pickup marker
+                moveArmToEncoderVal(300, 1);
+                moveBucketToEncoderVal(-650, 1);
 
-                    if (gamepad1.x) {
+                armMotor.setPower(0);
+                bucketTurner.setPower(0);
 
-                        currentMode = CurrentMode.LACUNA;
+                armMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+                bucketTurner.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 
-                    }
-
-                    if (gamepad1.dpad_up) {
-
-                        //pickup marker
-                        currentMode = CurrentMode.PICKUP_MARKER;
-
-                    }
-
-
-                    //normal driver
-                    double y = -gamepad1.left_stick_y; // Remember, this is reversed!
-                    double x = -gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
-                    double rx = -gamepad1.right_stick_x ;
-
-                    // Denominator is the largest motor power (absolute value) or 1
-                    // This ensures all the powers maintain the same ratio, but only when
-                    // at least one is out of the range [-1, 1]
-                    double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-                    double frontLeftPower = (y + x + rx) / denominator;
-                    double backLeftPower = (y - x + rx) / denominator;
-                    double frontRightPower = (y - x - rx) / denominator;
-                    double backRightPower = (y + x - rx) / denominator;
-
-                    setThrottle(frontLeftPower, frontRightPower, backLeftPower, backRightPower);
-
-                    break;
-
-                default:
-                    currentMode = CurrentMode.DRIVER_CONTROL;
             }
 
 
+            //normal driver
+            double y = -gamepad1.left_stick_y; // Remember, this is reversed!
+            double x = -gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
+            double rx = -gamepad1.right_stick_x ;
+
+            // Denominator is the largest motor power (absolute value) or 1
+            // This ensures all the powers maintain the same ratio, but only when
+            // at least one is out of the range [-1, 1]
+            double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
+            double frontLeftPower = (y + x + rx) / denominator;
+            double backLeftPower = (y - x + rx) / denominator;
+            double frontRightPower = (y - x - rx) / denominator;
+            double backRightPower = (y + x - rx) / denominator;
+
+            setThrottle(frontLeftPower, frontRightPower, backLeftPower, backRightPower);
+
         }
-
-
     }
 
     public void setThrottle(double frontLeftVelocity, double frontRightVelocity, double backLeftVelocity, double backRightVelocity) {
@@ -296,10 +287,10 @@ public class FSM_StatesTeleOp extends LinearOpMode {
         }
 
         // Set velocities
-        frontLeft.setVelocity(frontLeftVelocity * FSM_StatesTeleOp.MAX_TICKS_PER_SECOND);
-        frontRight.setVelocity(frontRightVelocity * FSM_StatesTeleOp.MAX_TICKS_PER_SECOND);
-        backLeft.setVelocity(backLeftVelocity * FSM_StatesTeleOp.MAX_TICKS_PER_SECOND);
-        backRight.setVelocity(backRightVelocity * FSM_StatesTeleOp.MAX_TICKS_PER_SECOND);
+        frontLeft.setVelocity(frontLeftVelocity * RedStatesTeleOp.MAX_TICKS_PER_SECOND);
+        frontRight.setVelocity(frontRightVelocity * RedStatesTeleOp.MAX_TICKS_PER_SECOND);
+        backLeft.setVelocity(backLeftVelocity * RedStatesTeleOp.MAX_TICKS_PER_SECOND);
+        backRight.setVelocity(backRightVelocity * RedStatesTeleOp.MAX_TICKS_PER_SECOND);
     }
 
     public void initializeRobot() {
@@ -319,15 +310,16 @@ public class FSM_StatesTeleOp extends LinearOpMode {
         //initialize servo
         intakeServo = hardwareMap.get(Servo.class, "intakeServo");
 
-        // initializing sensors
-        distanceLeftFront = hardwareMap.get(DistanceSensor.class, "distanceLeftFront");
-        distanceLeftBack = hardwareMap.get(DistanceSensor.class, "distanceLeftBack");
-        distanceRightFront = hardwareMap.get(DistanceSensor.class, "distanceRightFront");
-        distanceRightBack = hardwareMap.get(DistanceSensor.class, "distanceRightBack");
-        distanceFront = hardwareMap.get(DistanceSensor.class, "distanceFront");
-        distanceIntake = hardwareMap.get(DistanceSensor.class, "distanceIntake");
-        colorFront = hardwareMap.get(ColorSensor.class, "colorFront");
-
+		/*
+		// initializing sensors
+		distanceLeftFront = hardwareMap.get(DistanceSensor.class, "distanceLeftFront");
+		distanceLeftBack = hardwareMap.get(DistanceSensor.class, "distanceLeftBack");
+		distanceRightFront = hardwareMap.get(DistanceSensor.class, "distanceRightFront");
+		distanceRightBack = hardwareMap.get(DistanceSensor.class, "distanceRightBack");
+		distanceFront = hardwareMap.get(DistanceSensor.class, "distanceFront");
+		distanceIntake = hardwareMap.get(DistanceSensor.class, "distanceIntake");
+		colorFront = hardwareMap.get(ColorSensor.class, "colorFront");
+		*/
         initializeIMU();
 
 
@@ -611,5 +603,4 @@ public class FSM_StatesTeleOp extends LinearOpMode {
         backLeft.setVelocity(0);
 
     }
-
 }

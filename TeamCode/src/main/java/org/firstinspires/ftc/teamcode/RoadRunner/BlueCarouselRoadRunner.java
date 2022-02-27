@@ -13,14 +13,17 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.RoadRunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.TestPrograms.Carousel;
 import org.firstinspires.ftc.teamcode.TestPrograms.CyberDragonsOpModeTemplate;
 import org.firstinspires.ftc.teamcode.TestPrograms.ShippingHubAutomationLevels;
 
+import java.util.List;
 
-@Autonomous
+
+@Autonomous(name = "Blue: Carousel Autonomous", group = "Blue")
 public class BlueCarouselRoadRunner extends LinearOpMode {
 
     private DcMotorEx carouselTurner;
@@ -57,7 +60,7 @@ public class BlueCarouselRoadRunner extends LinearOpMode {
                 .build();
 
         Trajectory shippingHub = drive.trajectoryBuilder(carouselTurner.end())
-                .splineTo(new Vector2d(-20, 55), Math.toRadians(-90))
+                .splineTo(new Vector2d(-30, 55), Math.toRadians(-90))
                 .build();
 
         Trajectory parkWarehouse = drive.trajectoryBuilder(shippingHub.end().plus(new Pose2d(0,0,Math.toRadians(90))))
@@ -68,7 +71,13 @@ public class BlueCarouselRoadRunner extends LinearOpMode {
 
         waitForStart();
 
+
         if (opModeIsActive()) {
+
+
+            objectDetection();
+            telemetry.addData("Level", level);
+            telemetry.update();
 
             // do carousel
             drive.followTrajectory(carouselTurner);
@@ -81,7 +90,7 @@ public class BlueCarouselRoadRunner extends LinearOpMode {
             drive.followTrajectory(shippingHub);
             sleep(100);
 
-            dropFreightInLevel(3);
+            dropFreightInLevel(level);
 
             sleep(100);
 
@@ -141,7 +150,7 @@ public class BlueCarouselRoadRunner extends LinearOpMode {
         }
 
         carouselTurner.setVelocity(1750);
-        while (carouselTimer.milliseconds() < 2000) {
+        while (carouselTimer.milliseconds() < 2250) {
 
         }
 
@@ -273,6 +282,40 @@ public class BlueCarouselRoadRunner extends LinearOpMode {
         tfodParameters.inputSize = 320;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
+    }
+
+    private void objectDetection() {
+        float leftVal = 0.0F;
+        if (opModeIsActive())
+            if (tfod != null) {
+                List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+                if (updatedRecognitions != null) {
+                    telemetry.addData("# Object Detected", Integer.valueOf(updatedRecognitions.size()));
+                    int i = 0;
+                    for (Recognition recognition : updatedRecognitions) {
+                        telemetry.addData(String.format("label (%d)", new java.lang.Object[] { Integer.valueOf(i) }), recognition.getLabel());
+                        telemetry.addData(String.format("  left,top (%d)", new java.lang.Object[] { Integer.valueOf(i) }), "%.03f , %.03f", new java.lang.Object[] { Float.valueOf(recognition.getLeft()), Float.valueOf(recognition.getTop()) });
+                        telemetry.addData(String.format("  right,bottom (%d)", new java.lang.Object[] { Integer.valueOf(i) }), "%.03f , %.03f", new java.lang.Object[] { Float.valueOf(recognition.getRight()), Float.valueOf(recognition.getBottom()) });
+                        i++;
+                        objectsRecognized++;
+                        leftVal = recognition.getLeft();
+                    }
+                    if (leftVal <= xPosMarker && objectsRecognized == 1) {
+                        level = 1;
+                        telemetry.addData("Level", Integer.valueOf(level));
+                        telemetry.update();
+                    } else if (leftVal >= xPosMarker && objectsRecognized == 1) {
+                        level = 2;
+                        telemetry.addData("Level", Integer.valueOf(level));
+                        telemetry.update();
+                    } else if (objectsRecognized == 0) {
+                        level = 3;
+                        telemetry.addData("Level", Integer.valueOf(level));
+                        telemetry.update();
+                    }
+                    telemetry.update();
+                }
+            }
     }
 
 }

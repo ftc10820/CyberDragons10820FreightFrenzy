@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 @Autonomous
-//@Disabled
+@Disabled
 public class RotationTest extends LinearOpMode{
 
     private DcMotorEx frontLeft;

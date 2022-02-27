@@ -23,6 +23,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -39,14 +40,18 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * or add a @Disabled annotation to prevent this OpMode from being added to the Driver Station
  */
 @Autonomous
+@Disabled
 public class Carousel extends CyberDragonsOpModeTemplate {
+
+    private DcMotorEx carouselTurner;
 
     ElapsedTime carouselTimer = new ElapsedTime();
 
     @Override
     public void runOpMode() {
         
-       initializeRobot();
+        carouselTurner = hardwareMap.get(DcMotorEx.class, "CarouselTurner");
+
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -63,22 +68,22 @@ public class Carousel extends CyberDragonsOpModeTemplate {
 
         carouselTimer.reset();
 
-        runCarouselVelocity(1000);
+        carouselTurner.setPower(0.25);
         while (carouselTimer.milliseconds() < 500) {
 
         }
 
-        runCarouselVelocity(1250);
+        carouselTurner.setPower(0.5);
         while (carouselTimer.milliseconds() < 1000) {
 
         }
 
-        runCarouselVelocity(1750);
-        while (carouselTimer.milliseconds() < 2000) {
+        carouselTurner.setPower(0.75);
+        while (carouselTimer.milliseconds() < 2250) {
 
         }
 
-        runCarouselVelocity(0);
+        carouselTurner.setVelocity(0);
 
     }
 }

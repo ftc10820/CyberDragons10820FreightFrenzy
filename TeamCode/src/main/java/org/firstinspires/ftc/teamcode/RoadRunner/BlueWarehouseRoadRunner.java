@@ -11,13 +11,20 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.RoadRunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.TestPrograms.Carousel;
 import org.firstinspires.ftc.teamcode.TestPrograms.CyberDragonsOpModeTemplate;
 import org.firstinspires.ftc.teamcode.TestPrograms.ShippingHubAutomationLevels;
 
+import java.util.List;
 
-@Autonomous
+
+@Autonomous(name = "Blue: Warehouse Autonomous", group = "Blue")
 public class BlueWarehouseRoadRunner extends LinearOpMode {
 
     private DcMotorEx carouselTurner;
@@ -26,7 +33,20 @@ public class BlueWarehouseRoadRunner extends LinearOpMode {
     private DcMotor bucket;
 
     ElapsedTime carouselTimer = new ElapsedTime();
+
     ElapsedTime releaseTimer = new ElapsedTime();
+
+    // object detection variables
+    private static final String TFOD_MODEL_ASSET = "10820model.tflite";
+    private static final String[] LABELS = new String[] { "10820marker" };
+    private static final String VUFORIA_KEY = "Af2A/t3/////AAABmSsJTGsI6Ebgr6cIo4YGqmCBxd+lRenqxeIeJ3TQXcQgRlvrzKhb44K7xnbfJnHjD6eLQaFnpZZEa1Vz1PRYMNj3xCEhYZU7hAYQwyu1KBga3Lo0vEPXPSZW1o8DrM2C6IhYYGifzayZFNwZw5HtnPbyZvJfG4w6TX4EO8F0VSnZt87QtBW27nh5vSgRLN1XdzrVzm8h1ScZrPsIpSKJWVmNCWqOOeibloKfoZbhZ5A8vFz0I3nvMdi/v54DwcmS7GS/hryCgjhy4n9EhD1SnJ5325jnoyi4Fa5a/pibxPmAi8kU7ioHucmQRgv3yQHh17emqait9QNS4jTu6xyM6eeoVADsXTG4f7KK6nlZZjat";
+
+    private VuforiaLocalizer vuforia;
+    private TFObjectDetector tfod;
+
+    int objectsRecognized = 0;
+    int level = 0;
+    int xPosMarker = 150;
 
     public void runOpMode() throws InterruptedException {
 
@@ -37,29 +57,15 @@ public class BlueWarehouseRoadRunner extends LinearOpMode {
         drive.setPoseEstimate(startPose);
 
         Trajectory shippingHub = drive.trajectoryBuilder(startPose)
-                .splineTo(new Vector2d(-15, 50), Math.toRadians(-90))
+                .splineTo(new Vector2d(-15, 55), Math.toRadians(-90))
                 .build();
 
-        Trajectory intakeFreight = drive.trajectoryBuilder(shippingHub.end().plus(new Pose2d(0,0,Math.toRadians(90))))
-                .splineTo(new Vector2d(30, 80), Math.toRadians(0))
-                .lineTo(new Vector2d(50,80))
+        Trajectory parkWarehouse = drive.trajectoryBuilder(shippingHub.end().plus(new Pose2d(0,0,Math.toRadians(90))))
+                //.splineTo(new Vector2d(30, 80), Math.toRadians(0))
+                .lineTo(new Vector2d(50,55))
                 .build();
 
-        Trajectory placeFreight = drive.trajectoryBuilder(intakeFreight.end())
-                .lineTo(new Vector2d(30,80))
-                .splineTo(new Vector2d(-15,50), Math.toRadians(90))
-                .build();
 
-        /*
-        Trajectory placeFreightOnHub = drive.trajectoryBuilder(placeFreight.end().plus(new Pose2d(0,0, Math.toRadians(-90))))
-                .lineTo(new Vector2d(-15,50))
-                .build();
-        */
-
-        Trajectory parkWarehouse = drive.trajectoryBuilder(placeFreight.end().plus(new Pose2d(0,0,Math.toRadians(90))))
-                .splineTo(new Vector2d(30, 80), Math.toRadians(0))
-                .lineTo(new Vector2d(50,80))
-                .build();
 
         initializeMotors();
 
@@ -67,36 +73,21 @@ public class BlueWarehouseRoadRunner extends LinearOpMode {
 
         if (opModeIsActive()) {
 
-            // do carousel
+            objectDetection();
+            telemetry.addData("Level", level);
+            telemetry.update();
+
+            sleep(12000);
+
             drive.followTrajectory(shippingHub);
-            sleep(500);
+            sleep(100);
+
+            dropFreightInLevel(level);
 
             drive.turn(Math.toRadians(90));
-            sleep(500);
-
-            drive.followTrajectory(intakeFreight);
-            sleep(500);
-
-
-            drive.followTrajectory(placeFreight);
-            sleep(500);
-
-            /*
-            drive.turn(Math.toRadians(-90));
-            sleep(500);
-
-
-            drive.followTrajectory(placeFreightOnHub);
-            sleep(500);
-
-            */
-
-            drive.turn(Math.toRadians(90));
-            sleep(500);
-
+            sleep(100);
 
             drive.followTrajectory(parkWarehouse);
-            sleep(500);
 
 
         }
@@ -123,6 +114,15 @@ public class BlueWarehouseRoadRunner extends LinearOpMode {
 
         bucketTurner.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        initVuforia();
+        initTfod();
+
+        if (tfod != null) {
+
+            tfod.activate();
+            tfod.setZoom(1.0, 2.0);
+
+        }
 
     }
 
@@ -141,7 +141,7 @@ public class BlueWarehouseRoadRunner extends LinearOpMode {
         }
 
         carouselTurner.setVelocity(1750);
-        while (carouselTimer.milliseconds() < 2000) {
+        while (carouselTimer.milliseconds() < 2250) {
 
         }
 
@@ -241,6 +241,72 @@ public class BlueWarehouseRoadRunner extends LinearOpMode {
 
         }
 
+    }
+
+    /**
+     * Initialize the Vuforia localization engine.
+     */
+    private void initVuforia() {
+        /*
+         * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
+         */
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+
+        parameters.vuforiaLicenseKey = VUFORIA_KEY;
+        parameters.cameraName = hardwareMap.get(WebcamName.class, "Camera");
+
+        //  Instantiate the Vuforia engine
+        vuforia = ClassFactory.getInstance().createVuforia(parameters);
+
+        // Loading trackables is not necessary for the TensorFlow Object Detection engine.
+    }
+
+    /**
+     * Initialize the TensorFlow Object Detection engine.
+     */
+    private void initTfod() {
+        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
+                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+        tfodParameters.minResultConfidence = 0.8f;
+        tfodParameters.isModelTensorFlow2 = true;
+        tfodParameters.inputSize = 320;
+        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
+    }
+
+    private void objectDetection() {
+        float leftVal = 0.0F;
+        if (opModeIsActive())
+            if (tfod != null) {
+                List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+                if (updatedRecognitions != null) {
+                    telemetry.addData("# Object Detected", Integer.valueOf(updatedRecognitions.size()));
+                    int i = 0;
+                    for (Recognition recognition : updatedRecognitions) {
+                        telemetry.addData(String.format("label (%d)", new java.lang.Object[] { Integer.valueOf(i) }), recognition.getLabel());
+                        telemetry.addData(String.format("  left,top (%d)", new java.lang.Object[] { Integer.valueOf(i) }), "%.03f , %.03f", new java.lang.Object[] { Float.valueOf(recognition.getLeft()), Float.valueOf(recognition.getTop()) });
+                        telemetry.addData(String.format("  right,bottom (%d)", new java.lang.Object[] { Integer.valueOf(i) }), "%.03f , %.03f", new java.lang.Object[] { Float.valueOf(recognition.getRight()), Float.valueOf(recognition.getBottom()) });
+                        i++;
+                        objectsRecognized++;
+                        leftVal = recognition.getLeft();
+                    }
+                    if (leftVal <= xPosMarker && objectsRecognized == 1) {
+                        level = 2;
+                        telemetry.addData("Level", Integer.valueOf(level));
+                        telemetry.update();
+                    } else if (leftVal >= xPosMarker && objectsRecognized == 1) {
+                        level = 3;
+                        telemetry.addData("Level", Integer.valueOf(level));
+                        telemetry.update();
+                    } else if (objectsRecognized == 0) {
+                        level = 1;
+                        telemetry.addData("Level", Integer.valueOf(level));
+                        telemetry.update();
+                    }
+                    telemetry.update();
+                }
+            }
     }
 
 }

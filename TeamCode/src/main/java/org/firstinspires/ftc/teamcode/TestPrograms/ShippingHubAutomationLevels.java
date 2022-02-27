@@ -21,6 +21,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 @Autonomous
+@Disabled
 public class ShippingHubAutomationLevels extends CyberDragonsOpModeTemplate {
 
 
